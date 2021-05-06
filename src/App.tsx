@@ -1,24 +1,13 @@
 import React, { VFC } from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+import { ApolloProvider } from '@apollo/client/react/context/ApolloProvider';
+import Navigation from 'navigation';
+import client from 'apollo';
 
 const App: VFC = () => (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-        Edit <code>src/App.tsx</code> and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn React
-      </a>
-    </header>
-  </div>
+  <ApolloProvider client={client}>
+    <Navigation />
+  </ApolloProvider>
 );
 
 export default App;
