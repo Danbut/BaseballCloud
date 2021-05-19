@@ -1,11 +1,7 @@
-import authBackgroundImage from 'assets/images';
+import { authBackgroundImage } from 'assets/images';
 import React, { VFC } from 'react';
 import styled from 'styled-components';
-import { Box, Flex } from 'shared';
-
-const ContentContainer = styled(Flex)`
-  grid-area: content;
-`;
+import { Box, ContentContainer, Flex } from 'shared';
 
 const Modal = styled(Flex)`
   backdrop-filter: blur(5px);
@@ -19,7 +15,7 @@ const Privacy: VFC = () => (
     justifyContent="center"
     alignItems="center"
     overflow="auto"
-    backgroundImage={`url(${authBackgroundImage})`}
+    /* ts-ignore */ backgroundImage={`url(${authBackgroundImage})`}
     backgroundSize="cover"
     backgroundPosition="top center"
   >

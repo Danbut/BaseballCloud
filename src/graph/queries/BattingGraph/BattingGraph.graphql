@@ -1,0 +1,5 @@
+query BattingGraph($input: FilterGraphInput!) {
+  batting_graph(input: $input) {
+    graph_rows
+  }
+}
