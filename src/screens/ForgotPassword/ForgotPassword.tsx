@@ -1,5 +1,6 @@
 import authBackgroundImage from 'assets/images';
 import validateFormValues from 'helpers/validateFormSchema';
+import withAuth from 'hocs/withAuth';
 import React, { VFC } from 'react';
 import { Field, Form } from 'react-final-form';
 import { Button, Flex, Input, Validation, Text, Anchor, Box } from 'shared';
@@ -31,7 +32,8 @@ const SignInAnchor = styled(Anchor)`
 `;
 
 const ForgotPassword: VFC = () => {
-  const onSubmit = () => Promise.resolve();
+  const onSubmit = (values: ForgotPasswordFormValues) =>
+    Promise.resolve(values);
 
   return (
     <ContentContainer
@@ -125,4 +127,4 @@ const ForgotPassword: VFC = () => {
   );
 };
 
-export default ForgotPassword;
+export default withAuth(ForgotPassword);

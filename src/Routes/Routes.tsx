@@ -23,6 +23,7 @@ import { Grid } from 'shared';
 import { faUser, faLock, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import storage from 'services/storage';
+import routes from './constants';
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -43,7 +44,7 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-const Navigation: VFC = () => {
+const Routes: VFC = () => {
   const token = storage.getCredentials()?.token;
 
   useEffect(() => {
@@ -62,26 +63,30 @@ const Navigation: VFC = () => {
         >
           <Header />
           <Switch>
-            <Route path="/legal/terms">
+            <Route path={routes.terms}>
               <Terms />
             </Route>
-            <Route path="/legal/privacy">
+            <Route path={routes.privacy}>
               <Privacy />
             </Route>
-            <Route path="/login">
+            <Route path={routes.signIn}>
               <SignIn />
             </Route>
-            <Route path="/registration">
+            <Route path={routes.signUp}>
               <SignUp />
             </Route>
-            <Route path="/forgotpassword">
+            <Route path={routes.forgotPassword}>
               <ForgotPassword />
             </Route>
-            <Route path="/profile">
+            <Route path={routes.profile}>
               <Profile />
             </Route>
-            <Route exact path="/">
-              {token ? <Redirect to="/profile" /> : <Redirect to="/login" />}
+            <Route exact path={routes.root}>
+              {token ? (
+                <Redirect to={routes.profile} />
+              ) : (
+                <Redirect to={routes.signIn} />
+              )}
             </Route>
             <Route>
               <NotFound />
@@ -94,4 +99,4 @@ const Navigation: VFC = () => {
   );
 };
 
-export default Navigation;
+export default Routes;

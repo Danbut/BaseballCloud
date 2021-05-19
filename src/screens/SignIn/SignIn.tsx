@@ -14,6 +14,8 @@ import pickBy from 'lodash/pickBy';
 import identity from 'lodash/identity';
 import pick from 'lodash/pick';
 import { useHistory } from 'react-router-dom';
+import routes from 'Routes/constants';
+import withAuth from 'hocs/withAuth';
 
 const ContentContainer = styled(Flex)`
   grid-area: content;
@@ -81,7 +83,7 @@ const SignIn: FC = () => {
     ]) as Profile;
     storage.setProfile(profile);
     storage.setCredentials(credentials);
-    history.push('/profile');
+    history.push(routes.profile);
   };
 
   return (
@@ -198,4 +200,4 @@ const SignIn: FC = () => {
   );
 };
 
-export default SignIn;
+export default withAuth(SignIn);

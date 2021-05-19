@@ -1,5 +1,5 @@
 import authBackgroundImage from 'assets/images';
-import React from 'react';
+import React, { VFC } from 'react';
 import styled from 'styled-components';
 import { Box, Flex } from 'shared';
 
@@ -11,7 +11,7 @@ const Modal = styled(Flex)`
   backdrop-filter: blur(5px);
 `;
 
-const Legal = () => (
+const Terms: VFC = () => (
   <ContentContainer
     width="100%"
     height="100%"
@@ -451,4 +451,4 @@ const Legal = () => (
   </ContentContainer>
 );
 
-export default Legal;
+export default Terms;

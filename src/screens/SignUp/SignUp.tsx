@@ -17,6 +17,8 @@ import identity from 'lodash/identity';
 import pick from 'lodash/pick';
 import renameKey from 'helpers/renameKey';
 import { SignUpRequest } from 'services/api/dto/SignUpRequestTransformer';
+import routes from 'Routes/constants';
+import withAuth from 'hocs/withAuth';
 
 const ContentContainer = styled(Flex)`
   grid-area: content;
@@ -101,7 +103,7 @@ const SignUp: VFC = () => {
 
     storage.setProfile(profile);
     storage.setCredentials(credentials);
-    history.push('/profile');
+    history.push(routes.profile);
   };
 
   return (
@@ -243,4 +245,4 @@ const SignUp: VFC = () => {
   );
 };
 
-export default SignUp;
+export default withAuth(SignUp);

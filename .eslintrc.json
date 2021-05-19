@@ -46,8 +46,7 @@
     ],
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
-    "react/prop-types": 0,
-    "@typescript-eslint/no-unsafe-call": 0
+    "react/prop-types": 0
   },
   "settings": {
     "import/resolver": {

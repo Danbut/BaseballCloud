@@ -1,4 +1,5 @@
 import { useProfileQuery } from 'generated';
+import withAuth from 'hocs/withAuth';
 import React, { VFC } from 'react';
 
 const Profile: VFC = () => {
@@ -9,4 +10,4 @@ const Profile: VFC = () => {
   return <p>{JSON.stringify(data)}</p>;
 };
 
-export default Profile;
+export default withAuth(Profile);
