@@ -1,4 +1,4 @@
-import authBackgroundImage from 'assets/images';
+import { authBackgroundImage } from 'assets/images';
 import RoleSwitch from 'components/RoleSwitch';
 import validateFormValues from 'helpers/validateFormSchema';
 import React, { VFC } from 'react';
@@ -6,7 +6,15 @@ import { Field, Form } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
 import Auth from 'services/api';
 import storage from 'services/storage';
-import { Button, Flex, Input, Validation, Text, Anchor } from 'shared';
+import {
+  Button,
+  Flex,
+  Input,
+  Validation,
+  Text,
+  Anchor,
+  ContentContainer,
+} from 'shared';
 import styled from 'styled-components';
 import { Credentials } from 'types/Credentials';
 import { Profile } from 'types/Profile';
@@ -19,10 +27,6 @@ import renameKey from 'helpers/renameKey';
 import { SignUpRequest } from 'services/api/dto/SignUpRequestTransformer';
 import routes from 'Routes/constants';
 import withAuth from 'hocs/withAuth';
-
-const ContentContainer = styled(Flex)`
-  grid-area: content;
-`;
 
 const Modal = styled(Flex)`
   backdrop-filter: blur(5px);
@@ -160,7 +164,7 @@ const SignUp: VFC = () => {
                       placeholder="Email"
                       onFocus={onFocus}
                       onBlur={onBlur}
-                      isActive={active}
+                      isActive={active ?? false}
                       icon="email"
                     />
                   </Validation>
@@ -177,7 +181,7 @@ const SignUp: VFC = () => {
                       placeholder="Password"
                       onFocus={onFocus}
                       onBlur={onBlur}
-                      isActive={active}
+                      isActive={active ?? false}
                       type="password"
                       icon="password"
                     />
@@ -195,7 +199,7 @@ const SignUp: VFC = () => {
                       placeholder="Confirm Password"
                       onFocus={onFocus}
                       onBlur={onBlur}
-                      isActive={active}
+                      isActive={active ?? false}
                       type="password"
                       icon="confirm"
                     />

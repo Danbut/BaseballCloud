@@ -1,4 +1,11 @@
-import { Header, Footer, Input, Button, Validation } from './ui';
+import {
+  Header,
+  Footer,
+  Input,
+  Button,
+  Validation,
+  ContentContainer,
+} from './ui';
 import { BaseballIcon, LogoIcon, CheckboxIcon } from './icons';
 import { Anchor, Box, Flex, Grid, Text } from './primitives';
 
@@ -16,4 +23,5 @@ export {
   Button,
   Validation,
   CheckboxIcon,
+  ContentContainer,
 };

@@ -1,15 +1,20 @@
-import authBackgroundImage from 'assets/images';
+import { authBackgroundImage } from 'assets/images';
 import validateFormValues from 'helpers/validateFormSchema';
 import withAuth from 'hocs/withAuth';
 import React, { VFC } from 'react';
 import { Field, Form } from 'react-final-form';
-import { Button, Flex, Input, Validation, Text, Anchor, Box } from 'shared';
+import {
+  Button,
+  Flex,
+  Input,
+  Validation,
+  Text,
+  Anchor,
+  Box,
+  ContentContainer,
+} from 'shared';
 import styled from 'styled-components';
 import * as yup from 'yup';
-
-const ContentContainer = styled(Flex)`
-  grid-area: content;
-`;
 
 const Modal = styled(Flex)`
   backdrop-filter: blur(5px);
@@ -88,7 +93,7 @@ const ForgotPassword: VFC = () => {
                       placeholder="Email"
                       onFocus={onFocus}
                       onBlur={onBlur}
-                      isActive={active}
+                      isActive={active ?? false}
                       icon="email"
                     />
                   </Validation>
