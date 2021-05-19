@@ -31,10 +31,15 @@ class Storage {
     return null;
   };
 
-  setProfile = (profile: Profile): void =>
+  setProfile = (profile: Profile): void => {
     this.storage.setItem(this.profileKey, JSON.stringify(profile));
+    window.dispatchEvent(new Event('storage'));
+  };
 
-  removeProfile = (): void => this.storage.removeItem(this.profileKey);
+  removeProfile = (): void => {
+    this.storage.removeItem(this.profileKey);
+    window.dispatchEvent(new Event('storage'));
+  };
 }
 
 export default new Storage();

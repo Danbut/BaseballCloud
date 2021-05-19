@@ -5,11 +5,13 @@ import {
   space,
   layout,
   background,
+  border,
   compose,
   TypographyProps,
   ColorProps,
   SpaceProps,
   LayoutProps,
+  BorderProps,
   BackgroundProps,
 } from 'styled-system';
 
@@ -18,10 +20,11 @@ interface TextProps
     ColorProps,
     SpaceProps,
     LayoutProps,
-    BackgroundProps {}
+    BackgroundProps,
+    BorderProps {}
 
 const Text = styled.div<TextProps>(
-  compose(space, typography, color, layout, background)
+  compose(space, typography, color, layout, background, border)
 );
 
 export default Text;

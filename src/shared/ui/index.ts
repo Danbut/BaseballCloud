@@ -1,5 +1,13 @@
-export { default as Header } from './Header';
-export { default as Footer } from './Footer';
 export { default as Input } from './Input';
 export { default as Button } from './Button';
 export { default as Validation } from './Validation';
+export { default as ContentContainer } from './ContentContainer';
+export { default as FloatingLabelInput } from './FloatingLabelInput';
+export { default as FloatingLabelDropDown } from './FloatingLabelDropDown';
+export { default as FloatingLabelMultiDropDown } from './FloatingLabelMultiDropDown';
+export { default as FloatingLabelTextArea } from './FloatingLabelTextArea';
+export { default as Spinner } from './Spinner';
+export { default as DatePicker } from './DatePicker';
+export { default as Select } from './Select';
+export { default as Search } from './Search';
+export { default as SearchSuggestDropDown } from './SearchSuggestDropDown';
