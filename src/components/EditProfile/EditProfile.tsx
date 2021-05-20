@@ -2,6 +2,7 @@ import React from 'react';
 import { Flex, Box, Text } from 'shared';
 import styled from 'styled-components';
 import { avatarBackgroundImage } from 'assets/images';
+import FloatingLabelInput from 'shared/ui/FloatingLabelInput/FloatingLabelInput';
 
 const EditProfileContainer = styled(Flex)`
   grid-area: sidebar;
@@ -40,6 +41,14 @@ const EditProfile = () => (
         backgroundPosition="50% 50%"
       />
       <Text>Choose Photo</Text>
+    </ChoosePhotoForm>
+    <ChoosePhotoForm
+      as="form"
+      flexDirection="column"
+      alignItems="center"
+      mb="23px"
+    >
+      <FloatingLabelInput isActive={false} />
     </ChoosePhotoForm>
   </EditProfileContainer>
 );
