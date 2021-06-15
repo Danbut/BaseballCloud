@@ -15,7 +15,7 @@ const Privacy: VFC = () => (
     justifyContent="center"
     alignItems="center"
     overflow="auto"
-    backgroundImage={`url(${authBackgroundImage})`}
+    /* ts-ignore */ backgroundImage={`url(${authBackgroundImage})`}
     backgroundSize="cover"
     backgroundPosition="top center"
   >

@@ -44,8 +44,7 @@
     "postinstall": "husky install",
     "eject": "react-scripts eject",
     "cm": "cz --hook",
-    "generate": "graphql-codegen",
-    "prestart": "yarn generate"
+    "generate": "graphql-codegen"
   },
   "browserslist": {
     "production": [

@@ -1,10 +1,14 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -132,10 +136,18 @@ export type EventMlbComparisonTeamVelocityRowType = {
 
 export type EventMlbComparisonType = {
   __typename?: 'EventMlbComparisonType';
-  hitter_table_player_avg?: Maybe<Array<Maybe<EventMlbComparisonHitBallRowType>>>;
-  hitter_table_teams_avg?: Maybe<Array<Maybe<EventMlbComparisonTeamHitBallRowType>>>;
-  pitcher_table_spin_rate_teams_avg?: Maybe<Array<Maybe<EventMlbComparisonTeamSpinRateRowType>>>;
-  pitcher_table_velocity_teams_avg?: Maybe<Array<Maybe<EventMlbComparisonTeamVelocityRowType>>>;
+  hitter_table_player_avg?: Maybe<
+    Array<Maybe<EventMlbComparisonHitBallRowType>>
+  >;
+  hitter_table_teams_avg?: Maybe<
+    Array<Maybe<EventMlbComparisonTeamHitBallRowType>>
+  >;
+  pitcher_table_spin_rate_teams_avg?: Maybe<
+    Array<Maybe<EventMlbComparisonTeamSpinRateRowType>>
+  >;
+  pitcher_table_velocity_teams_avg?: Maybe<
+    Array<Maybe<EventMlbComparisonTeamVelocityRowType>>
+  >;
 };
 
 export type EventPitchingSummaryTableType = {
@@ -156,7 +168,9 @@ export type EventPitchingSummaryTableType = {
 export type EventPitchingSummaryType = {
   __typename?: 'EventPitchingSummaryType';
   pitching_summary_rows?: Maybe<Array<Maybe<EventPitchingSummaryTableType>>>;
-  velocity_chart_rows?: Maybe<Array<Maybe<EventPitchingSummaryVelocityChartType>>>;
+  velocity_chart_rows?: Maybe<
+    Array<Maybe<EventPitchingSummaryVelocityChartType>>
+  >;
 };
 
 export type EventPitchingSummaryVelocityChartType = {
@@ -214,12 +228,22 @@ export type EventPlayerSummaryReleasePointType = {
 export type EventPlayerSummaryType = {
   __typename?: 'EventPlayerSummaryType';
   hitter_unique_pitches?: Maybe<Array<Maybe<Scalars['String']>>>;
-  hitting_summary_table_rows?: Maybe<Array<Maybe<EventPlayerSummaryHittingTableType>>>;
-  hitting_zone_chart_rows?: Maybe<Array<Maybe<EventPlayerSummaryHittingZoneType>>>;
+  hitting_summary_table_rows?: Maybe<
+    Array<Maybe<EventPlayerSummaryHittingTableType>>
+  >;
+  hitting_zone_chart_rows?: Maybe<
+    Array<Maybe<EventPlayerSummaryHittingZoneType>>
+  >;
   pitcher_unique_pitches?: Maybe<Array<Maybe<Scalars['String']>>>;
-  pitching_summary_table_rows?: Maybe<Array<Maybe<EventPlayerSummaryPitchingTableType>>>;
-  pitching_zone_chart_rows?: Maybe<Array<Maybe<EventPlayerSummaryPitchingZoneType>>>;
-  release_point_chart_rows?: Maybe<Array<Maybe<EventPlayerSummaryReleasePointType>>>;
+  pitching_summary_table_rows?: Maybe<
+    Array<Maybe<EventPlayerSummaryPitchingTableType>>
+  >;
+  pitching_zone_chart_rows?: Maybe<
+    Array<Maybe<EventPlayerSummaryPitchingZoneType>>
+  >;
+  release_point_chart_rows?: Maybe<
+    Array<Maybe<EventPlayerSummaryReleasePointType>>
+  >;
 };
 
 export type EventProfileInput = {
@@ -465,46 +489,37 @@ export type Mutation = {
   update_tc_profile?: Maybe<UpdateTcProfilePayload>;
 };
 
-
 export type MutationAdd_Billing_MethodArgs = {
   input: AddBillingMethodInput;
 };
-
 
 export type MutationParse_EventsArgs = {
   input: ParseEventsInput;
 };
 
-
 export type MutationRemove_Billing_MethodArgs = {
   input: RemoveBillingMethodInput;
 };
-
 
 export type MutationSubscriptionArgs = {
   input: SubscriptionInput;
 };
 
-
 export type MutationUnsubscribeArgs = {
   input: UnsubscribeInput;
 };
-
 
 export type MutationUpdate_Favorite_ProfileArgs = {
   input: UpdateFavoriteProfileInput;
 };
 
-
 export type MutationUpdate_NotificationArgs = {
   input: UpdateNotificationInput;
 };
 
-
 export type MutationUpdate_ProfileArgs = {
   input: UpdateProfileInput;
 };
-
 
 export type MutationUpdate_Tc_ProfileArgs = {
   input: UpdateTcProfileInput;
@@ -578,10 +593,16 @@ export type PlanRowsResult = {
 
 export type PlayerDevelopmentChartType = {
   __typename?: 'PlayerDevelopmentChartType';
-  hitting_summary_table_rows?: Maybe<Array<Maybe<EventPlayerSummaryHittingTableType>>>;
+  hitting_summary_table_rows?: Maybe<
+    Array<Maybe<EventPlayerSummaryHittingTableType>>
+  >;
   pitcher_unique_pitches?: Maybe<Array<Maybe<Scalars['String']>>>;
-  pitching_zone_chart_rows?: Maybe<Array<Maybe<EventPlayerSummaryPitchingZoneType>>>;
-  release_point_chart_rows?: Maybe<Array<Maybe<EventPlayerSummaryReleasePointType>>>;
+  pitching_zone_chart_rows?: Maybe<
+    Array<Maybe<EventPlayerSummaryPitchingZoneType>>
+  >;
+  release_point_chart_rows?: Maybe<
+    Array<Maybe<EventPlayerSummaryReleasePointType>>
+  >;
 };
 
 export type PlayerDevelopmentPlateRowType = {
@@ -600,8 +621,12 @@ export type PlayerDevelopmentPlateRowType = {
 
 export type PlayerDevelopmentPlateType = {
   __typename?: 'PlayerDevelopmentPlateType';
-  hitter_swing_miss_calc_rows?: Maybe<Array<Maybe<PlayerDevelopmentPlateRowType>>>;
-  pitcher_swing_miss_calc_rows?: Maybe<Array<Maybe<PlayerDevelopmentPlateRowType>>>;
+  hitter_swing_miss_calc_rows?: Maybe<
+    Array<Maybe<PlayerDevelopmentPlateRowType>>
+  >;
+  pitcher_swing_miss_calc_rows?: Maybe<
+    Array<Maybe<PlayerDevelopmentPlateRowType>>
+  >;
 };
 
 export type PlayerDevelopmentSummaryRowType = {
@@ -730,256 +755,205 @@ export type Query = {
   teams?: Maybe<TeamRowsResult>;
 };
 
-
 export type QueryBatting_GraphArgs = {
   input: FilterGraphInput;
 };
-
 
 export type QueryBatting_LogArgs = {
   input: FilterBattingLogInput;
 };
 
-
 export type QueryBatting_SummaryArgs = {
   id: Scalars['ID'];
 };
-
 
 export type QueryEventArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QueryEvent_DetailArgs = {
   input: FilterEventDetailInput;
 };
-
 
 export type QueryEvent_Hitting_SummaryArgs = {
   input: FilterEventDetailInput;
 };
 
-
 export type QueryEvent_Mlb_ComparisonArgs = {
   input: FilterEventDetailInput;
 };
-
 
 export type QueryEvent_Pitching_SummaryArgs = {
   input: FilterEventDetailInput;
 };
 
-
 export type QueryEvent_Player_SummaryArgs = {
   input: FilterEventDetailInput;
 };
-
 
 export type QueryEvent_RowsArgs = {
   input: FilterEventRowsInput;
 };
 
-
 export type QueryEvent_Umpire_SummaryArgs = {
   input: FilterEventDetailInput;
 };
-
 
 export type QueryEventsArgs = {
   input: FilterEventsInput;
 };
 
-
 export type QueryFacilitiesArgs = {
   search: Scalars['String'];
 };
-
 
 export type QueryLeaderboard_BattingArgs = {
   input: FilterLeaderboardInput;
 };
 
-
 export type QueryLeaderboard_PitchingArgs = {
   input: FilterLeaderboardInput;
 };
-
 
 export type QueryMy_FacilityArgs = {
   input: FilterFacilityInput;
 };
 
-
 export type QueryMy_FavoriteArgs = {
   input: FilterProfilesInput;
 };
-
 
 export type QueryMy_TeamArgs = {
   input: FilterTeamInput;
 };
 
-
 export type QueryNotificationsArgs = {
   input: FilterNotificationsInput;
 };
-
 
 export type QueryPitching_GraphArgs = {
   input: FilterGraphInput;
 };
 
-
 export type QueryPitching_LogArgs = {
   input: FilterPitchingLogInput;
 };
-
 
 export type QueryPitching_SummaryArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QueryPlayer_Development_ChartArgs = {
   input: FilterPlayerDevelopmentInput;
 };
-
 
 export type QueryPlayer_Development_PlateArgs = {
   input: FilterPlayerDevelopmentInput;
 };
 
-
 export type QueryPlayer_Development_SummaryArgs = {
   input: FilterPlayerDevelopmentInput;
 };
-
 
 export type QueryProfileArgs = {
   id: Scalars['String'];
 };
 
-
 export type QueryProfile_EventsArgs = {
   input: FilterProfileEventsInput;
 };
-
 
 export type QueryProfile_NamesArgs = {
   input: FilterProfileNamesInput;
 };
 
-
 export type QueryProfilesArgs = {
   input: FilterProfilesInput;
 };
-
 
 export type QuerySchoolsArgs = {
   search: Scalars['String'];
 };
 
-
 export type QueryTc_Batting_GraphArgs = {
   input: FilterGraphInput;
 };
-
 
 export type QueryTc_Batting_LogArgs = {
   input: FilterBattingLogInput;
 };
 
-
 export type QueryTc_Batting_SummaryArgs = {
   id: Scalars['ID'];
 };
-
 
 export type QueryTc_EventArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QueryTc_Event_DetailArgs = {
   input: FilterEventDetailInput;
 };
-
 
 export type QueryTc_Event_Hitting_SummaryArgs = {
   input: FilterEventDetailInput;
 };
 
-
 export type QueryTc_Event_Mlb_ComparisonArgs = {
   input: FilterEventDetailInput;
 };
-
 
 export type QueryTc_Event_Pitching_SummaryArgs = {
   input: FilterEventDetailInput;
 };
 
-
 export type QueryTc_Event_Player_SummaryArgs = {
   input: FilterEventDetailInput;
 };
-
 
 export type QueryTc_Event_RowsArgs = {
   input: FilterEventRowsInput;
 };
 
-
 export type QueryTc_Event_Umpire_SummaryArgs = {
   input: FilterEventDetailInput;
 };
-
 
 export type QueryTc_Pitching_GraphArgs = {
   input: FilterGraphInput;
 };
 
-
 export type QueryTc_Pitching_LogArgs = {
   input: FilterPitchingLogInput;
 };
-
 
 export type QueryTc_Pitching_SummaryArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QueryTc_Player_Development_ChartArgs = {
   input: FilterPlayerDevelopmentInput;
 };
-
 
 export type QueryTc_Player_Development_PlateArgs = {
   input: FilterPlayerDevelopmentInput;
 };
 
-
 export type QueryTc_Player_Development_SummaryArgs = {
   input: FilterPlayerDevelopmentInput;
 };
-
 
 export type QueryTc_ProfileArgs = {
   id: Scalars['String'];
 };
 
-
 export type QueryTc_Profile_EventsArgs = {
   input: FilterProfileEventsInput;
 };
 
-
 export type QueryTc_Profile_NamesArgs = {
   input: FilterProfileNamesInput;
 };
-
 
 export type QueryTeamsArgs = {
   search: Scalars['String'];
@@ -1235,61 +1209,78 @@ export type User = {
   id: Scalars['ID'];
 };
 
-export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProfileQueryVariables = Exact<{ [key: string]: never }>;
 
-
-export type ProfileQuery = (
-  { __typename?: 'Query' }
-  & { current_profile?: Maybe<(
-    { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'first_name' | 'last_name' | 'position' | 'position2' | 'avatar' | 'throws_hand' | 'bats_hand' | 'biography' | 'school_year' | 'feet' | 'inches' | 'weight' | 'age'>
-    & { school?: Maybe<(
-      { __typename?: 'School' }
-      & Pick<School, 'id' | 'name'>
-    )>, teams?: Maybe<Array<Maybe<(
-      { __typename?: 'Team' }
-      & Pick<Team, 'id' | 'name'>
-    )>>>, facilities?: Maybe<Array<Maybe<(
-      { __typename?: 'Facility' }
-      & Pick<Facility, 'id' | 'email' | 'u_name'>
-    )>>> }
-  )> }
-);
-
+export type ProfileQuery = { __typename?: 'Query' } & {
+  current_profile?: Maybe<
+    { __typename?: 'Profile' } & Pick<
+      Profile,
+      | 'id'
+      | 'first_name'
+      | 'last_name'
+      | 'position'
+      | 'position2'
+      | 'avatar'
+      | 'throws_hand'
+      | 'bats_hand'
+      | 'biography'
+      | 'school_year'
+      | 'feet'
+      | 'inches'
+      | 'weight'
+      | 'age'
+    > & {
+        school?: Maybe<{ __typename?: 'School' } & Pick<School, 'id' | 'name'>>;
+        teams?: Maybe<
+          Array<Maybe<{ __typename?: 'Team' } & Pick<Team, 'id' | 'name'>>>
+        >;
+        facilities?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Facility' } & Pick<
+                Facility,
+                'id' | 'email' | 'u_name'
+              >
+            >
+          >
+        >;
+      }
+  >;
+};
 
 export const ProfileDocument = gql`
-    query Profile {
-  current_profile {
-    id
-    first_name
-    last_name
-    position
-    position2
-    avatar
-    throws_hand
-    bats_hand
-    biography
-    school_year
-    feet
-    inches
-    weight
-    age
-    school {
+  query Profile {
+    current_profile {
       id
-      name
-    }
-    teams {
-      id
-      name
-    }
-    facilities {
-      id
-      email
-      u_name
+      first_name
+      last_name
+      position
+      position2
+      avatar
+      throws_hand
+      bats_hand
+      biography
+      school_year
+      feet
+      inches
+      weight
+      age
+      school {
+        id
+        name
+      }
+      teams {
+        id
+        name
+      }
+      facilities {
+        id
+        email
+        u_name
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useProfileQuery__
@@ -1306,14 +1297,27 @@ export const ProfileDocument = gql`
  *   },
  * });
  */
-export function useProfileQuery(baseOptions?: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
-      }
-export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
-        }
+export function useProfileQuery(
+  baseOptions?: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(
+    ProfileDocument,
+    options
+  );
+}
+export function useProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(
+    ProfileDocument,
+    options
+  );
+}
 export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
 export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
-export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
+export type ProfileQueryResult = Apollo.QueryResult<
+  ProfileQuery,
+  ProfileQueryVariables
+>;

@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { VFC } from 'react';
 
-const FloatingLabelTextArea = () => <></>;
+interface FloatingLabelTextArea extends React.HTMLProps<HTMLInputElement> {
+  isActive: boolean;
+  isRequire?: boolean;
+}
+
+const FloatingLabelTextArea: VFC<FloatingLabelTextArea> = () => <></>;
 
 export default FloatingLabelTextArea;

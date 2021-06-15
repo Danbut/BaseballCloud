@@ -4,3 +4,7 @@ export { default as Input } from './Input';
 export { default as Button } from './Button';
 export { default as Validation } from './Validation';
 export { default as ContentContainer } from './ContentContainer';
+export { default as FloatingLabelInput } from './FloatingLabelInput';
+export { default as FloatingLabelDropDown } from './FloatingLabelDropDown';
+export { default as FloatingLabelMultiDropDown } from './FloatingLabelMultiDropDown';
+export { default as FloatingLabelTextArea } from './FloatingLabelTextArea';

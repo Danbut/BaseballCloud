@@ -49,7 +49,7 @@ const ForgotPassword: VFC = () => {
       alignItems="center"
       overflow="auto"
       p="16px"
-      backgroundImage={`url(${authBackgroundImage})`}
+      /* ts-ignore */ backgroundImage={`url(${authBackgroundImage})`}
       backgroundSize="cover"
       backgroundPosition="top center"
     >

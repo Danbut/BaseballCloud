@@ -118,7 +118,7 @@ const SignUp: VFC = () => {
       justifyContent="center"
       alignItems="center"
       p="16px"
-      backgroundImage={`url(${authBackgroundImage})`}
+      /* ts-ignore */ backgroundImage={`url(${authBackgroundImage})`}
       backgroundSize="cover"
       backgroundPosition="top center"
     >
