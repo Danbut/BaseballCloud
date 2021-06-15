@@ -14,23 +14,13 @@ const StyledControlBox = styled(Box)`
   padding: 6px 12px 10px 37px;
 `;
 
-const ActiveControlBox: FC = ({ children }) => (
-  <StyledControlBox bg="white" border="1px solid dodgerBlue">
+const ControlBox: FC<ControlBoxProps> = ({ children, isActive }) => (
+  <StyledControlBox
+    bg="athensGray"
+    border={`1px solid ${isActive ? 'dodgerBlue' : 'transparent'}`}
+  >
     {children}
   </StyledControlBox>
 );
-
-const InactiveControlBox: FC = ({ children }) => (
-  <StyledControlBox bg="athensGray" border="1px solid transparent">
-    {children}
-  </StyledControlBox>
-);
-
-const ControlBox: FC<ControlBoxProps> = ({ children, isActive }) =>
-  isActive ? (
-    <ActiveControlBox>{children}</ActiveControlBox>
-  ) : (
-    <InactiveControlBox>{children}</InactiveControlBox>
-  );
 
 export default ControlBox;
