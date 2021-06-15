@@ -11,7 +11,12 @@ const withAuth = <P extends Record<string, unknown>>(
   const location = useLocation();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (
+      !isAuthenticated &&
+      !RegExp(
+        `${routes.signIn}|${routes.signUp}|${routes.forgotPassword}|${routes.privacy}|${routes.terms}`
+      ).test(location.pathname)
+    ) {
       history.push(routes.signIn);
     }
     if (
@@ -24,11 +29,8 @@ const withAuth = <P extends Record<string, unknown>>(
     }
   }, [history, isAuthenticated, location.pathname]);
 
-  if (isAuthenticated) {
-    /* eslint-disable react/jsx-props-no-spreading */
-    return <Component {...props} />;
-  }
-  return null;
+  /* eslint-disable react/jsx-props-no-spreading */
+  return <Component {...props} />;
 };
 
 export default withAuth;
