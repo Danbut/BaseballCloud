@@ -47,6 +47,12 @@ const FormSectionHeader: FC<{ children: string }> = ({ children }) => (
   <Flex mb="15px">{children}</Flex>
 );
 
+const Floating = styled(Flex)`
+  > * {
+    flex-basis: 48%;
+  }
+`;
+
 const EditProfile = () => {
   const onSubmit = async (values: EditProfileValues) => Promise.resolve();
 
@@ -83,9 +89,23 @@ const EditProfile = () => {
       <Form
         onSubmit={onSubmit}
         validate={validateFormValues(EditProfileSchema)}
-        render={({ handleSubmit }) => (
+        mutators={{
+          onChangePosition: ([value], state, tools) => {
+            tools.changeValue(state, 'position', () => value as string);
+          },
+        }}
+        initialValue={{
+          position: '',
+        }}
+        render={({
+          handleSubmit,
+          form: {
+            mutators: { onChangePosition },
+          },
+          values: { position },
+        }) => (
           <form onSubmit={handleSubmit}>
-            <Flex mb="20px" justifyContent="space-between">
+            <Floating mb="20px" justifyContent="space-between">
               <Field<string> name="firstName">
                 {({
                   input: { onChange, onFocus, onBlur },
@@ -97,6 +117,7 @@ const EditProfile = () => {
                     onBlur={onBlur}
                     isActive={!!active}
                     placeholder="First Name"
+                    isRequire
                   />
                 )}
               </Field>
@@ -111,21 +132,24 @@ const EditProfile = () => {
                     onBlur={onBlur}
                     isActive={!!active}
                     placeholder="Last Name"
+                    isRequire
                   />
                 )}
               </Field>
-            </Flex>
+            </Floating>
             <Field<string> name="position">
               {({
                 input: { onChange, onFocus, onBlur },
                 meta: { error, active, touched },
               }) => (
                 <FloatingLabelDropDown
-                  onChange={onChange}
+                  onChange={onChangePosition}
                   onFocus={onFocus}
                   onBlur={onBlur}
+                  value={position}
                   isActive={!!active}
                   placeholder="Position In Game"
+                  isRequire
                 />
               )}
             </Field>

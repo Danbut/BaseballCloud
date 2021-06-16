@@ -10,10 +10,15 @@ interface ControlBoxProps {
 const StyledControlBox = styled(Box)`
   display: block;
   width: 100%;
-  height: 50px;
+  height: 40px;
   border-radius: 4px;
-  padding: 6px 12px 10px 37px;
-  /* position: relative; */
+  padding: 0 16px;
+  position: relative;
+  :focus-within label {
+    transform-origin: left top;
+    visibility: visible;
+    transform: translate(4px, 2px) scale(0.8);
+  }
 `;
 
 const FloatingLabelControlBox: FC<ControlBoxProps> = ({

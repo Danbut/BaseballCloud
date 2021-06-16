@@ -1,96 +1,131 @@
-import React, { VFC } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { FormEventHandler, useRef, useState, VFC } from 'react';
+import Box from 'shared/primitives/Box';
+import Flex from 'shared/primitives/Flex';
 import styled from 'styled-components';
+import FloatingLabelInput from '../FloatingLabelInput';
 
-interface FloatingLabelDropDownProps extends React.HTMLProps<HTMLInputElement> {
+interface FloatingLabelDropDownProps {
   isActive: boolean;
   isRequire?: boolean;
+  placeholder: string;
+  onChange(value: string): void;
+  onBlur: React.FocusEventHandler<HTMLInputElement>;
+  onFocus: React.FocusEventHandler<HTMLInputElement>;
+  value?: string;
 }
 
-// CONTAINER
-// cursor: default;
+const InputContainer = styled(Flex)`
+  position: relative;
+`;
 
-// line-height: 1.42857143;
-// color: #333;
-// font-size: 1.6rem;
-// font-family: 'Lato', sans-serif;
-// background-repeat: no-repeat;
-// background-color: #fff;
-// max-height: 200px;
-// position: absolute;
-// left: 0;
-// top: 100%;
-// width: 100%;
-// box-sizing: border-box;
-// z-index: 10;
-// margin-top: 6px;
-// box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.1);
-// border: solid 1px #eff1f3;
-// border-radius: 4px;
+const IconContainer = styled(Box)`
+  position: absolute;
+  z-index: 9;
+  pointer-events: none;
+`;
 
-// LIST
-// cursor: default;
+const validIcons = {
+  up: (
+    <IconContainer right="16px" bottom="10px">
+      <FontAwesomeIcon icon="chevron-up" color="black" />
+    </IconContainer>
+  ),
+  down: (
+    <IconContainer right="16px" bottom="10px">
+      <FontAwesomeIcon icon="chevron-down" color="black" />
+    </IconContainer>
+  ),
+} as const;
 
-// line-height: 1.42857143;
-// color: #333;
-// font-size: 1.6rem;
-// font-family: 'Lato', sans-serif;
-// background-repeat: no-repeat;
-// touch-action: manipulation;
-// max-height: 198px;
-// overflow-y: auto;
-// box-sizing: border-box;
+interface OptionProps {
+  isSelected?: boolean;
+  isFocus?: boolean;
+  label: string;
+}
 
-// OPTION
+const Option = styled(Box)`
+  :focus {
+    background-color: dodgerBlue;
+    opacity: 0.1;
+  }
+`;
 
-// background-color: #fff;
-// display: block;
-// padding: 8px 10px;
-// box-sizing: border-box;
-// font-size: 16px;
-// color: #788b99;
-// margin-bottom: 6px;
-// margin-top: 8px;
+const DropDownMenu = styled.div`
+  max-height: 200px;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 10;
+  margin-top: 6px;
+  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.1);
+  border: solid 1px #eff1f3;
+  border-radius: 4px;
+  overflow-y: auto;
+  background: white;
+`;
 
-// <div class="Select-menu-outer">
-//    <div class="Select-menu" id="react-select-18">
-//       <div class="Select-option" role="option" aria-label="Catcher" id="react-select-18" />
-//       <div class="Select-option" role="option" aria-label="First Base" id="react-select-18" />
-//       <div class="Select-option" role="option" aria-label="Second Base" id="react-select-18"/>
-//       <div class="Select-option is-selected is-focused" role="option" aria-label="Shortstop" id="react-select-18"/>
-//       <div class="Select-option" role="option" aria-label="Third Base" id="react-select-18"/>
-//       <div class="Select-option" role="option" aria-label="Outfield" id="react-select-18"/>
-//       <div class="Select-option" role="option" aria-label="Pitcher" id="react-select-18"/>
-//    </div>
-// </div>
-
-// const DropDownMenu = styled.div`
-//   z-index: 10;
-// `;
-
-// const DropDownOptionList = ({ children }) => (
-//   <DropDownMenu>{children}</DropDownMenu>
-// );
+// TODO: Что я не понимаю???
+// TODO: почему компонент перерендеривается нескоько раз и пропсы становятся андефайнд
 
 const FloatingLabelDropDown: VFC<FloatingLabelDropDownProps> = ({
   isActive,
-}) => (
-  <div>
-    {/* <InputContainer mb="15px">
-      {icon && validIcons[icon]}
-      <ControlBox isActive={isActive}>
-        <StyledInput
-          type={type}
-          name="password"
-          title="Password"
-          onChange={onChange}
-          placeholder={placeholder}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />
-      </ControlBox>
+  placeholder,
+  onChange,
+  onBlur,
+  onFocus,
+  isRequire,
+  value,
+}) => {
+  const items = ['1', '2', '3', '4', '5', '6', '7'];
+  const selectedItem = '3';
+  const input = useRef<HTMLInputElement>(null);
+
+  const icon = isActive ? 'up' : 'down';
+  console.info('value', value);
+  console.info('active', isActive);
+  return (
+    <InputContainer mb="15px">
+      {validIcons[icon]}
+      <FloatingLabelInput
+        onFocus={onFocus}
+        isActive={isActive}
+        onBlur={(e) => {
+          if (e.isTrusted) {
+            e.preventDefault();
+          } else {
+            onBlur(e);
+          }
+        }}
+        value={value}
+        placeholder={placeholder}
+        isRequire={isRequire}
+        isDisabled
+        ref={input}
+      />
+      {isActive ? (
+        <DropDownMenu>
+          {items.map((i) => (
+            <Option
+              bg={i === selectedItem ? '' : 'white'}
+              p="8px 10px"
+              mt="8px"
+              mb="6px"
+              onClick={() => {
+                console.log('dfdfd');
+                onChange(i);
+                input.current?.blur();
+              }}
+            >
+              {i}
+            </Option>
+          ))}
+        </DropDownMenu>
+      ) : null}
     </InputContainer>
-    {isActive ? <DropDownOptionList /> : null} */}
-  </div>
-);
+  );
+};
 
 export default FloatingLabelDropDown;

@@ -20,7 +20,13 @@ import {
   Terms,
 } from 'screens';
 import { Grid } from 'shared';
-import { faUser, faLock, faCheck } from '@fortawesome/free-solid-svg-icons';
+import {
+  faUser,
+  faLock,
+  faCheck,
+  faChevronUp,
+  faChevronDown,
+} from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import storage from 'services/storage';
 import routes from './constants';
@@ -48,7 +54,7 @@ const Routes: VFC = () => {
   const token = storage.getCredentials()?.token;
 
   useEffect(() => {
-    library.add(faUser, faLock, faCheck);
+    library.add(faUser, faLock, faCheck, faChevronUp, faChevronDown);
   }, []);
 
   return (

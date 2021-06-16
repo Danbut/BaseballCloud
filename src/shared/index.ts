@@ -10,7 +10,7 @@ import {
   FloatingLabelMultiDropDown,
   FloatingLabelTextArea,
 } from './ui';
-import { BaseballIcon, LogoIcon, CheckboxIcon, ArrowIcon } from './icons';
+import { BaseballIcon, LogoIcon, CheckboxIcon } from './icons';
 import { Anchor, Box, Flex, Grid, Text } from './primitives';
 
 export {
@@ -21,7 +21,6 @@ export {
   Text,
   LogoIcon,
   BaseballIcon,
-  ArrowIcon,
   Box,
   Footer,
   Input,
