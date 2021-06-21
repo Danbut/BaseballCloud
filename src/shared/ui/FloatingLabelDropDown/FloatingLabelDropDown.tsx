@@ -39,12 +39,6 @@ const validIcons = {
   ),
 } as const;
 
-interface OptionProps {
-  isSelected?: boolean;
-  isFocus?: boolean;
-  label: string;
-}
-
 const Option = styled(Box)`
   :focus {
     background-color: dodgerBlue;
@@ -94,7 +88,7 @@ const FloatingLabelDropDown: VFC<FloatingLabelDropDownProps> = ({
   const icon = isActive ? 'up' : 'down';
 
   return (
-    <InputContainer mb="15px" onFocus={onFocus} onBlur={onBlur}>
+    <InputContainer mb="15px">
       {validIcons[icon]}
       <FloatingLabelInput
         onFocus={onFocus}

@@ -10,7 +10,8 @@ interface ControlBoxProps {
 const StyledControlBox = styled(Box)`
   display: block;
   width: 100%;
-  height: 40px;
+  min-height: 40px;
+  max-height: fit-content;
   border-radius: 4px;
   padding: 0 16px;
   position: relative;
