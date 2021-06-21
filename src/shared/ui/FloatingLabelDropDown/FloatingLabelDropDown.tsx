@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FormEventHandler, useRef, useState, VFC } from 'react';
+import React, { useRef, VFC } from 'react';
 import Box from 'shared/primitives/Box';
 import Flex from 'shared/primitives/Flex';
 import styled from 'styled-components';
@@ -9,10 +9,11 @@ interface FloatingLabelDropDownProps {
   isActive: boolean;
   isRequire?: boolean;
   placeholder: string;
-  onChange(value: string): void;
+  onChange: (...args: any[]) => any;
   onBlur: React.FocusEventHandler<HTMLInputElement>;
   onFocus: React.FocusEventHandler<HTMLInputElement>;
   value?: string;
+  items?: string[];
 }
 
 const InputContainer = styled(Flex)`
@@ -28,12 +29,12 @@ const IconContainer = styled(Box)`
 const validIcons = {
   up: (
     <IconContainer right="16px" bottom="10px">
-      <FontAwesomeIcon icon="chevron-up" color="black" />
+      <FontAwesomeIcon icon="chevron-up" color="#788b99" />
     </IconContainer>
   ),
   down: (
     <IconContainer right="16px" bottom="10px">
-      <FontAwesomeIcon icon="chevron-down" color="black" />
+      <FontAwesomeIcon icon="chevron-down" color="#788b99" />
     </IconContainer>
   ),
 } as const;
@@ -67,9 +68,6 @@ const DropDownMenu = styled.div`
   background: white;
 `;
 
-// TODO: Что я не понимаю???
-// TODO: почему компонент перерендеривается нескоько раз и пропсы становятся андефайнд
-
 const FloatingLabelDropDown: VFC<FloatingLabelDropDownProps> = ({
   isActive,
   placeholder,
@@ -78,26 +76,32 @@ const FloatingLabelDropDown: VFC<FloatingLabelDropDownProps> = ({
   onFocus,
   isRequire,
   value,
+  items,
 }) => {
-  const items = ['1', '2', '3', '4', '5', '6', '7'];
-  const selectedItem = '3';
   const input = useRef<HTMLInputElement>(null);
 
+  const sevValueAndDispatchEvent = (changingValue: string) => {
+    /* eslint-disable @typescript-eslint/unbound-method */
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value'
+    )?.set;
+    nativeInputValueSetter?.call(input.current, changingValue);
+    const change = new Event('input', { bubbles: true });
+    input.current?.dispatchEvent(change);
+  };
+
   const icon = isActive ? 'up' : 'down';
-  console.info('value', value);
-  console.info('active', isActive);
+
   return (
-    <InputContainer mb="15px">
+    <InputContainer mb="15px" onFocus={onFocus} onBlur={onBlur}>
       {validIcons[icon]}
       <FloatingLabelInput
         onFocus={onFocus}
         isActive={isActive}
-        onBlur={(e) => {
-          if (e.isTrusted) {
-            e.preventDefault();
-          } else {
-            onBlur(e);
-          }
+        onBlur={onBlur}
+        onChange={(e) => {
+          onChange(e.target.value);
         }}
         value={value}
         placeholder={placeholder}
@@ -107,16 +111,14 @@ const FloatingLabelDropDown: VFC<FloatingLabelDropDownProps> = ({
       />
       {isActive ? (
         <DropDownMenu>
-          {items.map((i) => (
+          {items?.map((i) => (
             <Option
-              bg={i === selectedItem ? '' : 'white'}
+              bg={i === value ? 'rgba(72, 187, 255, 0.1)' : 'white'}
               p="8px 10px"
               mt="8px"
               mb="6px"
-              onClick={() => {
-                console.log('dfdfd');
-                onChange(i);
-                input.current?.blur();
+              onMouseDown={() => {
+                sevValueAndDispatchEvent(i);
               }}
             >
               {i}

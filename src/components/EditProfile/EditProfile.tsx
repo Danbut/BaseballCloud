@@ -148,6 +148,7 @@ const EditProfile = () => {
                   onBlur={onBlur}
                   value={position}
                   isActive={!!active}
+                  items={['1', '2', '3', '4', '5', '6', '7']}
                   placeholder="Position In Game"
                   isRequire
                 />

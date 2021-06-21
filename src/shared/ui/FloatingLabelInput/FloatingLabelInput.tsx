@@ -14,20 +14,6 @@ import FloatingLabelControlBox from '../FloatingLabelControlBox';
 
 const FloatingLabelInputContainer = styled(Flex)``;
 
-// TODO: 1) Сделать, чтобы active менялась done
-// TODO: 2) Сделать контрол бокс как на сайте done
-// TODO: 3) Сделать floating label done
-// TODO: 4) Сделать сетку
-// TODO: 5) Сверстать остальные 3 инпута
-// TODO: 6) Сделать работающим choose photo
-// TODO: 7) Сверстать шапку, когда залогинен
-// TODO:
-// TODO:
-// TODO:
-// TODO:
-// TODO:
-// TODO:
-
 const StyledInput = styled.input`
   border: none;
   background-image: none;
@@ -42,6 +28,10 @@ const StyledInput = styled.input`
   :disabled {
     pointer-events: none;
   }
+  ::placeholder {
+    color: #788b99;
+  }
+  color: #667784;
 `;
 
 const StyledLabel = styled.label`
@@ -50,12 +40,13 @@ const StyledLabel = styled.label`
   transform: translate(17px, 15px) scale(1.15);
   position: absolute;
   transition: all 0.2s;
+  transition: color #788b99;
   white-space: nowrap;
   overflow: hidden;
   font-size: 14px;
   line-height: 1;
   font-weight: 400;
-  color: #788b99;
+  color: #667784;
   display: inline-block;
   visibility: hidden;
   top: 0;
