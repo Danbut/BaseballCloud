@@ -10,11 +10,16 @@ interface FloatingLabelMultiDropDown {
   isActive: boolean;
   isRequire?: boolean;
   placeholder: string;
-  onChange: (...args: any[]) => any;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur: React.FocusEventHandler<HTMLInputElement>;
   onFocus: React.FocusEventHandler<HTMLInputElement>;
-  values?: string[];
-  items?: string[];
+  values?: Item[];
+  items?: Item[];
+}
+
+interface Item {
+  readonly id: number;
+  readonly name: string;
 }
 
 const InputContainer = styled(Flex)`

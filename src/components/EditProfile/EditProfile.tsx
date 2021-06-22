@@ -13,6 +13,14 @@ import { avatarBackgroundImage } from 'assets/images';
 import { Field, Form } from 'react-final-form';
 import validateFormValues from 'helpers/validateFormSchema';
 import * as yup from 'yup';
+import {
+  FacilitiesDocument,
+  SchoolsDocument,
+  TeamsDocument,
+  useSchoolsQuery,
+  useTeamsQuery,
+} from 'generated';
+import { useQuery } from '@apollo/client';
 
 const EditProfileContainer = styled(Flex)`
   grid-area: sidebar;
@@ -297,8 +305,8 @@ const EditProfile = () => {
                   onBlur={onBlur}
                   isActive={!!active}
                   placeholder="Teams"
-                  items={['1sdadsadasdas', '2sdad', '3', '4dsadsadsad']}
-                  values={value}
+                  // items={['1sdadsadasdas', '2sdad', '3', '4dsadsadsad']}
+                  // values={value}
                 />
               )}
             </Field>
