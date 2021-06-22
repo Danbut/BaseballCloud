@@ -1,8 +1,8 @@
 schema:
   - https://baseballcloud-back.herokuapp.com/api/v1/graphql:
       headers:
-        - access-token: yacDPF4HbFL8dHpO7tF9hg
-        - client: tF7WB7N2qc-yEvbhEunDpw
+        - access-token: 8LKMdVZbDvUSZXvDLHx_bA
+        - client: YsT55EZwPnRTXr_ZW7RjsQ
         - uid: daniel.buterus@purrweb.com
 documents: './src/**/*.graphql'
 generates:

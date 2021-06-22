@@ -1,13 +1,14 @@
 import EditProfile from 'components/EditProfile';
-import { useProfileQuery } from 'generated';
+import {
+  useProfileQuery,
+  useTeamsQuery,
+  useUpdateProfileMutation,
+} from 'generated';
 import withAuth from 'hocs/withAuth';
 import React, { VFC } from 'react';
-import { ContentContainer, Flex } from 'shared';
-import styled from 'styled-components';
+import { ContentContainer } from 'shared';
 
 const Profile: VFC = () => {
-  const { loading, data, error } = useProfileQuery();
-
   if (loading) return <p>...loading</p>;
   if (error) return <p>...error</p>;
   return (

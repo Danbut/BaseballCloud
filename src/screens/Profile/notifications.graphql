@@ -1,0 +1,9 @@
+query Notifications($input: FilterNotificationsInput!) {
+  notifications(input: $input) {
+    notifications {
+      id
+      description
+      link
+    }
+  }
+}
