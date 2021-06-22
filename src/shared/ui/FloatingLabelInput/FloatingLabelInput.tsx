@@ -1,18 +1,6 @@
-import getTheme from 'helpers/getTheme';
-import React, {
-  forwardRef,
-  ForwardRefExoticComponent,
-  MutableRefObject,
-  RefAttributes,
-  VFC,
-} from 'react';
-import Box from 'shared/primitives/Box';
-import Flex from 'shared/primitives/Flex';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
-import ControlBox from '../ControlBox';
 import FloatingLabelControlBox from '../FloatingLabelControlBox';
-
-const FloatingLabelInputContainer = styled(Flex)``;
 
 const StyledInput = styled.input`
   border: none;
