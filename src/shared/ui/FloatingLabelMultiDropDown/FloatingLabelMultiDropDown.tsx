@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import union from 'lodash/union';
 import React, { useRef, VFC } from 'react';
 import Box from 'shared/primitives/Box';
 import Flex from 'shared/primitives/Flex';
 import styled from 'styled-components';
 import FloatingLabelControlBox from '../FloatingLabelControlBox';
-import FloatingLabelInput from '../FloatingLabelInput';
 
 interface FloatingLabelMultiDropDown {
   isActive: boolean;
@@ -48,6 +48,8 @@ const DeleteIcon = styled.span`
   border-top-left-radius: 2px;
   border-right: 1px solid rgba(0, 126, 255, 0.24);
   padding: 1px 5px 3px;
+  z-index: 9;
+  position: relative;
 `;
 
 const ChopContainer = styled.div`
@@ -74,11 +76,19 @@ const Label = styled.div`
 
 interface ChopProps {
   value: string;
+  onDelete: () => void;
 }
 
-const Chop: VFC<ChopProps> = ({ value }) => (
+const Chop: VFC<ChopProps> = ({ value, onDelete }) => (
   <ChopContainer>
-    <DeleteIcon>x</DeleteIcon>
+    <DeleteIcon
+      onClick={(e) => {
+        e.stopPropagation();
+        onDelete();
+      }}
+    >
+      x
+    </DeleteIcon>
     <Label>{value}</Label>
   </ChopContainer>
 );
@@ -123,10 +133,12 @@ const StyledInput = styled.input`
   ::placeholder {
     color: #788b99;
   }
-  color: #667784;
+  color: transparent;
 
   height: 100%;
   width: 100%;
+  padding: 0 16px;
+  z-index: 1;
 `;
 
 const StyledLabel = styled.label`
@@ -168,27 +180,44 @@ const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
 }) => {
   const input = useRef<HTMLInputElement>(null);
 
-  // const sevValueAndDispatchEvent = (changingValue: string) => {
-  //   /* eslint-disable @typescript-eslint/unbound-method */
-  //   const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-  //     window.HTMLInputElement.prototype,
-  //     'value'
-  //   )?.set;
-  //   nativeInputValueSetter?.call(input.current, values);
-  //   const change = new Event('input', { bubbles: true });
-  //   input.current?.dispatchEvent(change);
-  // };
+  const sevValueAndDispatchEvent = (value: string) => {
+    /* eslint-disable @typescript-eslint/unbound-method */
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value'
+    )?.set;
+    nativeInputValueSetter?.call(
+      input.current,
+      `${union(values, [value]).join(' ')}`
+    );
+    const change = new Event('input', { bubbles: true });
+    input.current?.dispatchEvent(change);
+  };
 
   const icon = isActive ? 'up' : 'down';
 
   const label = `${placeholder}${isRequire ? ' *' : ''}`;
+
+  const onDelete = (value: string) => {
+    /* eslint-disable @typescript-eslint/unbound-method */
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value'
+    )?.set;
+    nativeInputValueSetter?.call(
+      input.current,
+      `${(values?.join(' ') ?? '').replace(value, '')}`
+    );
+    const change = new Event('input', { bubbles: true });
+    input.current?.dispatchEvent(change);
+  };
 
   return (
     <InputContainer mb="15px">
       {validIcons[icon]}
       <FloatingLabelControlBox isActive={isActive}>
         {values?.map((v) => (
-          <Chop value={v} />
+          <Chop value={v} onDelete={() => onDelete(v)} />
         ))}
         <SelectInput>
           <StyledInput
@@ -198,6 +227,7 @@ const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
             onFocus={onFocus}
             title={label}
             readOnly
+            placeholder={placeholder}
           />
           <StyledLabel>{label}</StyledLabel>
         </SelectInput>
@@ -205,7 +235,15 @@ const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
       {isActive ? (
         <DropDownMenu>
           {items?.map((i) => (
-            <Option bg="white" p="8px 10px" mt="8px" mb="6px">
+            <Option
+              bg="white"
+              p="8px 10px"
+              mt="8px"
+              mb="6px"
+              onMouseDown={() => {
+                sevValueAndDispatchEvent(i);
+              }}
+            >
               {i}
             </Option>
           ))}

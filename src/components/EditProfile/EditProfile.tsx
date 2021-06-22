@@ -282,9 +282,13 @@ const EditProfile = () => {
                 />
               )}
             </Field>
-            <Field<string> name="team">
+            <Field<string[]>
+              name="team"
+              parse={(value) => (value as string).split(' ').filter((v) => v)}
+              format={(value) => value ?? []}
+            >
               {({
-                input: { onChange, onFocus, onBlur },
+                input: { onChange, onFocus, onBlur, value },
                 meta: { error, active, touched },
               }) => (
                 <FloatingLabelMultiDropDown
@@ -292,7 +296,9 @@ const EditProfile = () => {
                   onFocus={onFocus}
                   onBlur={onBlur}
                   isActive={!!active}
-                  placeholder="Team"
+                  placeholder="Teams"
+                  items={['1sdadsadasdas', '2sdad', '3', '4dsadsadsad']}
+                  values={value}
                 />
               )}
             </Field>
