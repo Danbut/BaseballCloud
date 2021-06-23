@@ -6,20 +6,20 @@ import Flex from 'shared/primitives/Flex';
 import styled from 'styled-components';
 import FloatingLabelControlBox from '../FloatingLabelControlBox';
 
-interface FloatingLabelMultiDropDown {
+interface FloatingLabelMultiDropDownProps {
   isActive: boolean;
   isRequire?: boolean;
   placeholder: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur: React.FocusEventHandler<HTMLInputElement>;
   onFocus: React.FocusEventHandler<HTMLInputElement>;
-  values?: Item[];
-  items?: Item[];
+  values?: Readonly<Item>[];
+  items?: Readonly<Item>[];
 }
 
-interface Item {
-  readonly id: number;
-  readonly name: string;
+export interface Item {
+  id: number;
+  name: string;
 }
 
 const InputContainer = styled(Flex)`
@@ -80,7 +80,7 @@ const Label = styled.div`
 `;
 
 interface ChopProps {
-  value: string;
+  value: Readonly<Item>;
   onDelete: () => void;
 }
 
@@ -94,7 +94,7 @@ const Chop: VFC<ChopProps> = ({ value, onDelete }) => (
     >
       x
     </DeleteIcon>
-    <Label>{value}</Label>
+    <Label>{value.name}</Label>
   </ChopContainer>
 );
 
@@ -173,7 +173,7 @@ const SelectInput = styled.div`
   width: 100%;
 `;
 
-const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
+const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDownProps> = ({
   isActive,
   placeholder,
   onChange,
@@ -185,7 +185,7 @@ const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
 }) => {
   const input = useRef<HTMLInputElement>(null);
 
-  const sevValueAndDispatchEvent = (value: string) => {
+  const sevValueAndDispatchEvent = (value: Readonly<Item>) => {
     /* eslint-disable @typescript-eslint/unbound-method */
     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
       window.HTMLInputElement.prototype,
@@ -193,7 +193,10 @@ const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
     )?.set;
     nativeInputValueSetter?.call(
       input.current,
-      `${union(values, [value]).join(' ')}`
+      `${union(
+        values?.reduce((acc, v) => [...acc, v.name], [] as string[]),
+        [value.name]
+      ).join(' ')}`
     );
     const change = new Event('input', { bubbles: true });
     input.current?.dispatchEvent(change);
@@ -203,7 +206,7 @@ const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
 
   const label = `${placeholder}${isRequire ? ' *' : ''}`;
 
-  const onDelete = (value: string) => {
+  const onDelete = (value: Readonly<Item>) => {
     /* eslint-disable @typescript-eslint/unbound-method */
     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
       window.HTMLInputElement.prototype,
@@ -211,7 +214,11 @@ const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
     )?.set;
     nativeInputValueSetter?.call(
       input.current,
-      `${(values?.join(' ') ?? '').replace(value, '')}`
+      `${(
+        values
+          ?.reduce((acc, v) => [...acc, v.name], [] as string[])
+          .join(' ') ?? ''
+      ).replace(value.name, '')}`
     );
     const change = new Event('input', { bubbles: true });
     input.current?.dispatchEvent(change);
@@ -249,7 +256,7 @@ const FloatingLabelMultiDropDown: VFC<FloatingLabelMultiDropDown> = ({
                 sevValueAndDispatchEvent(i);
               }}
             >
-              {i}
+              {i.name}
             </Option>
           ))}
         </DropDownMenu>

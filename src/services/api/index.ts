@@ -18,6 +18,8 @@ const Auth = {
     client.post<SignInResponse>('/auth/sign_in', data),
   signUp: async (data: SignUpRequest): Promise<AxiosResponse<SignInResponse>> =>
     client.post<SignInResponse>('/auth', data),
+  getSignedUrl: async (name: string) => client.post('/s3/signed_url', { name }),
+  uploadPhoto: async (url: string, name: string) => client.post(url, { name }),
 };
 
 export default Auth;

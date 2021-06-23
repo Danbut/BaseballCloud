@@ -5,6 +5,11 @@ import Flex from 'shared/primitives/Flex';
 import styled from 'styled-components';
 import FloatingLabelInput from '../FloatingLabelInput';
 
+export interface Item {
+  id: number;
+  name: string;
+}
+
 interface FloatingLabelDropDownProps {
   isActive: boolean;
   isRequire?: boolean;
@@ -12,8 +17,8 @@ interface FloatingLabelDropDownProps {
   onChange: (...args: any[]) => any;
   onBlur: React.FocusEventHandler<HTMLInputElement>;
   onFocus: React.FocusEventHandler<HTMLInputElement>;
-  value?: string;
-  items?: string[];
+  value?: Item;
+  items?: Item[];
 }
 
 const InputContainer = styled(Flex)`
@@ -97,7 +102,7 @@ const FloatingLabelDropDown: VFC<FloatingLabelDropDownProps> = ({
         onChange={(e) => {
           onChange(e.target.value);
         }}
-        value={value}
+        value={value?.name}
         placeholder={placeholder}
         isRequire={isRequire}
         isDisabled
@@ -112,10 +117,10 @@ const FloatingLabelDropDown: VFC<FloatingLabelDropDownProps> = ({
               mt="8px"
               mb="6px"
               onMouseDown={() => {
-                sevValueAndDispatchEvent(i);
+                sevValueAndDispatchEvent(i.name);
               }}
             >
-              {i}
+              {i.name}
             </Option>
           ))}
         </DropDownMenu>
