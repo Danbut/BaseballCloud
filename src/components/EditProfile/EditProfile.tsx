@@ -28,6 +28,8 @@ import { Item } from 'shared/ui/FloatingLabelMultiDropDown/FloatingLabelMultiDro
 const EditProfileContainer = styled(Flex)`
   grid-area: sidebar;
   grid-column: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;
 
 const ChoosePhotoForm = styled(Flex)``;
@@ -546,9 +548,9 @@ const EditProfile = () => {
       p="16px"
       borderLeft="1px solid rgba(0, 0, 0, 0.1)"
       borderRight="1px solid rgba(0, 0, 0, 0.1)"
-      overflow="auto"
       boxShadow="0 2px 15px 0 rgb(0 0 0 / 10%)"
       flexDirection="column"
+      flex="1"
     >
       <ChoosePhotoForm
         as="form"

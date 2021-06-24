@@ -140,7 +140,7 @@ const Profile: VFC = () => {
     <ContentContainer
       background="white"
       justifyContent="space-between"
-      overflow={['visible']}
+      overflow={['visible', 'hidden']}
     >
       <EditProfile />
       <Main>
