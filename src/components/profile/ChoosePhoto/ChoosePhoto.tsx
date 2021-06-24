@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { avatarBackgroundImage } from 'assets/images';
 import { Box, Flex } from 'shared';
-import { useState } from 'react';
+import { useState, VFC } from 'react';
 import Auth from 'services/api';
 
 const ChoosePhotoInput = styled.input`
@@ -23,12 +23,15 @@ const ChoosePhotoLabel = styled.label`
   }
 `;
 
-const ChoosePhoto = () => {
+interface ChoosePhotoProps {
+  onChange: any;
+}
+
+const ChoosePhoto: VFC<ChoosePhotoProps> = ({ onChange }) => {
   const [isUpload, setIsUpload] = useState(false);
   const [pictureInfo, setPictureInfo] = useState<File>();
-  const [pictureUrl, setPictureUrl] = useState<string>();
 
-  const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const onChangePhoto = (e: React.FormEvent<HTMLInputElement>) => {
     // eslint-disable-next-line
     // @ts-ignore
     /* eslint-disable */ setPictureInfo(e.target.files[0]);
@@ -53,7 +56,7 @@ const ChoosePhoto = () => {
       />
       {!isUpload && (
         <>
-          <ChoosePhotoInput type="file" id="photo" onChange={onChange} />
+          <ChoosePhotoInput type="file" id="photo" onChange={onChangePhoto} />
           <ChoosePhotoLabel htmlFor="photo">Choose Photo</ChoosePhotoLabel>
         </>
       )}
@@ -65,7 +68,7 @@ const ChoosePhoto = () => {
             onClick={() => {
               //@ts-ignore
               Auth.uploadPhoto(pictureInfo).then((r) => {
-                setPictureUrl(r);
+                onChange(r);
                 setIsUpload(false);
               });
             }}
@@ -76,7 +79,6 @@ const ChoosePhoto = () => {
             as="a"
             onClick={() => {
               setPictureInfo(undefined);
-              setPictureUrl(undefined);
               setIsUpload(false);
             }}
           >

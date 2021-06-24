@@ -142,7 +142,9 @@ const Profile: VFC = () => {
       justifyContent="space-between"
       overflow={['visible', 'hidden']}
     >
-      <EditProfile />
+      {data?.current_profile && (
+        <EditProfile id={data.current_profile.id} onCancel={() => {}} />
+      )}
       <Main>
         <SummaryEvents>
           <PitcherSummary>

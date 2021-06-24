@@ -5,6 +5,7 @@ import {
   FloatingLabelInput,
   FloatingLabelMultiDropDown,
   FloatingLabelTextArea,
+  Validation,
 } from 'shared';
 import styled from 'styled-components';
 import { Field, Form } from 'react-final-form';
@@ -17,6 +18,7 @@ import {
   useFacilitiesQuery,
   useSchoolsQuery,
   useTeamsQuery,
+  useUpdateProfileMutation,
 } from 'generated';
 
 import { Item } from 'shared/ui/FloatingLabelMultiDropDown/FloatingLabelMultiDropDown';
@@ -40,14 +42,40 @@ type EditProfileValues = {
   weight: number;
   throws: string;
   bats: string;
-  school: string;
+  school: School;
   schoolYear: string;
-  team: string[];
-  facility: string[];
+  team: Team[];
+  facility: Facility[];
   description: string;
+  avatar: string;
 };
 
-const EditProfileSchema = yup.object().shape({});
+const EditProfileSchema = yup.object().shape({
+  firstName: yup.string().required('First Name is required.'),
+  lastName: yup.string().required('Last Name is required.'),
+  position: yup.string().required('Position is required.'),
+  age: yup
+    .number()
+    .positive('You must be older than 0')
+    .max(30, 'Must not be older than 30')
+    .required('Age is required.'),
+  feet: yup
+    .number()
+    .min(4, 'Minimum height is 4')
+    .max(7, 'Maximum height is 7')
+    .required('Feet is required.'),
+  inches: yup
+    .number()
+    .min(0, 'Inches can be from 0 to 11.')
+    .max(11, 'Inches can be from 0 to 11.'),
+  weight: yup
+    .number()
+    .min(50, 'Minimal weight is 50 lbs.')
+    .max(350, 'Maximum weight is 350 lbs.')
+    .required('Weight is required.'),
+  throws: yup.string().required('Trow is required.'),
+  bats: yup.string().required('Bats is required.'),
+});
 
 const SectionDivider = styled(Flex)`
   position: relative;
@@ -89,30 +117,44 @@ const Floating = styled(Flex)`
 
 const FirstName: VFC = () => (
   <Field<string> name="firstName">
-    {({ input: { onChange, onFocus, onBlur }, meta: { active } }) => (
-      <FloatingLabelInput
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="First Name"
-        isRequire
-      />
+    {({
+      input: { onChange, onFocus, onBlur },
+      meta: { error, active, touched },
+    }) => (
+      <Validation message={touched ? (error as string) : undefined}>
+        <Flex mb="20px">
+          <FloatingLabelInput
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            isActive={!!active}
+            placeholder="First Name"
+            isRequire
+          />
+        </Flex>
+      </Validation>
     )}
   </Field>
 );
 
 const LastName: VFC = () => (
   <Field<string> name="lastName">
-    {({ input: { onChange, onFocus, onBlur }, meta: { active } }) => (
-      <FloatingLabelInput
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Last Name"
-        isRequire
-      />
+    {({
+      input: { onChange, onFocus, onBlur },
+      meta: { error, active, touched },
+    }) => (
+      <Validation message={touched ? (error as string) : undefined}>
+        <Flex mb="20px">
+          <FloatingLabelInput
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            isActive={!!active}
+            placeholder="Last Name"
+            isRequire
+          />
+        </Flex>
+      </Validation>
     )}
   </Field>
 );
@@ -149,29 +191,40 @@ const positions = [
 ] as const;
 
 const SelectPosition: VFC = () => (
-  <Field<typeof positions[number]>
+  <Field<string>
     name="position"
-    parse={(value: string) => positions.find((p) => p?.name === value)!}
+    parse={(value: string) => positions.find((p) => p?.name === value)!.slug}
+    format={(value: string) =>
+      value && positions.find((p) => p?.slug === value)!.name
+    }
   >
-    {({ input: { onChange, onFocus, onBlur, value }, meta: { active } }) => (
-      <FloatingLabelDropDown
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Position"
-        items={(positions as unknown) as Item[]}
-        value={{ id: Math.random(), name: value.name }}
-        isRequire
-      />
+    {({
+      input: { onChange, onFocus, onBlur, value },
+      meta: { error, active, touched },
+    }) => (
+      <Validation message={touched ? (error as string) : undefined}>
+        <FloatingLabelDropDown
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          isActive={!!active}
+          placeholder="Position"
+          items={(positions as unknown) as Item[]}
+          value={{ id: Math.random(), name: value }}
+          isRequire
+        />
+      </Validation>
     )}
   </Field>
 );
 
 const SelectSecondaryPosition: VFC = () => (
-  <Field<typeof positions[number]>
+  <Field<string>
     name="secondaryPosition"
-    parse={(value: string) => positions.find((p) => p?.name === value)!}
+    parse={(value: string) => positions.find((p) => p?.name === value)!.slug}
+    format={(value: string) =>
+      value && positions.find((p) => p?.slug === value)!.name
+    }
   >
     {({ input: { onChange, onFocus, onBlur, value }, meta: { active } }) => (
       <FloatingLabelDropDown
@@ -181,82 +234,113 @@ const SelectSecondaryPosition: VFC = () => (
         isActive={!!active}
         placeholder="Secondary Position"
         items={(positions as unknown) as Item[]}
-        value={{ id: Math.random(), name: value.name }}
+        value={{ id: Math.random(), name: value }}
       />
     )}
   </Field>
 );
 
 const Age: VFC = () => (
-  <Flex mb="20px">
-    <Field<string> name="age">
-      {({ input: { onChange, onFocus, onBlur }, meta: { active } }) => (
-        <FloatingLabelInput
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          isActive={!!active}
-          placeholder="Age"
-          isRequire
-        />
-      )}
-    </Field>
-  </Flex>
-);
-
-const Feet: VFC = () => (
-  <Field<string> name="feet">
+  <Field<number>
+    name="age"
+    parse={(value) => parseInt(value, 10)}
+    format={(value) => value.toString()}
+  >
     {({
       input: { onChange, onFocus, onBlur },
       meta: { error, active, touched },
     }) => (
-      <FloatingLabelInput
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Feet"
-        isRequire
-      />
+      <Validation message={touched ? (error as string) : undefined}>
+        <Flex mb="20px">
+          <FloatingLabelInput
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            isActive={!!active}
+            placeholder="Age"
+            isRequire
+          />
+        </Flex>
+      </Validation>
+    )}
+  </Field>
+);
+
+const Feet: VFC = () => (
+  <Field<number>
+    name="feet"
+    parse={(value) => parseInt(value, 10)}
+    format={(value) => value.toString()}
+  >
+    {({
+      input: { onChange, onFocus, onBlur },
+      meta: { error, active, touched },
+    }) => (
+      <Validation message={touched ? (error as string) : undefined}>
+        <Flex mb="20px">
+          <FloatingLabelInput
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            isActive={!!active}
+            placeholder="Feet"
+            isRequire
+          />
+        </Flex>
+      </Validation>
     )}
   </Field>
 );
 
 const Inches: VFC = () => (
-  <Field<string> name="inches">
+  <Field<number>
+    name="inches"
+    parse={(value) => parseInt(value, 10)}
+    format={(value) => value.toString()}
+  >
     {({
       input: { onChange, onFocus, onBlur },
       meta: { error, active, touched },
     }) => (
-      <FloatingLabelInput
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Inches"
-      />
+      <Validation message={touched ? (error as string) : undefined}>
+        <Flex mb="20px">
+          <FloatingLabelInput
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            isActive={!!active}
+            placeholder="Inches"
+          />
+        </Flex>
+      </Validation>
     )}
   </Field>
 );
 
 const Weight: VFC = () => (
-  <Flex mb="20px">
-    <Field<string> name="weight">
-      {({
-        input: { onChange, onFocus, onBlur },
-        meta: { error, active, touched },
-      }) => (
-        <FloatingLabelInput
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          isActive={!!active}
-          placeholder="Weight"
-          isRequire
-        />
-      )}
-    </Field>
-  </Flex>
+  <Field<number>
+    name="weight"
+    parse={(value) => parseInt(value, 10)}
+    format={(value) => value.toString()}
+  >
+    {({
+      input: { onChange, onFocus, onBlur },
+      meta: { error, active, touched },
+    }) => (
+      <Validation message={touched ? (error as string) : undefined}>
+        <Flex mb="20px">
+          <FloatingLabelInput
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            isActive={!!active}
+            placeholder="Weight"
+            isRequire
+          />
+        </Flex>
+      </Validation>
+    )}
+  </Field>
 );
 
 const hands = [
@@ -271,41 +355,61 @@ const hands = [
 ] as const;
 
 const SelectThrows: VFC = () => (
-  <Field<typeof hands[number]>
+  <Field<string>
     name="throws"
-    parse={(value: string) => hands.find((h) => h?.name === value)!}
+    parse={(value: string) => hands.find((h) => h?.name === value)!.slug}
+    format={(value: string) =>
+      value && hands.find((h) => h?.slug === value)!.name
+    }
   >
-    {({ input: { onChange, onFocus, onBlur, value }, meta: { active } }) => (
-      <FloatingLabelDropDown
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Throws"
-        items={(hands as unknown) as Item[]}
-        value={{ id: Math.random(), name: value.name }}
-        isRequire
-      />
+    {({
+      input: { onChange, onFocus, onBlur, value },
+      meta: { error, active, touched },
+    }) => (
+      <Validation message={touched ? (error as string) : undefined}>
+        <Flex mb="20px">
+          <FloatingLabelDropDown
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            isActive={!!active}
+            placeholder="Throws"
+            items={(hands as unknown) as Item[]}
+            value={{ id: Math.random(), name: value }}
+            isRequire
+          />
+        </Flex>
+      </Validation>
     )}
   </Field>
 );
 
 const SelectBats: VFC = () => (
-  <Field<typeof hands[number]>
+  <Field<string>
     name="bats"
-    parse={(value: string) => hands.find((h) => h?.name === value)!}
+    parse={(value: string) => hands.find((h) => h?.name === value)!.slug}
+    format={(value: string) =>
+      value && hands.find((h) => h?.slug === value)!.name
+    }
   >
-    {({ input: { onChange, onFocus, onBlur, value }, meta: { active } }) => (
-      <FloatingLabelDropDown
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Bats"
-        items={(hands as unknown) as Item[]}
-        value={{ id: Math.random(), name: value.name }}
-        isRequire
-      />
+    {({
+      input: { onChange, onFocus, onBlur, value },
+      meta: { error, active, touched },
+    }) => (
+      <Validation message={touched ? (error as string) : undefined}>
+        <Flex mb="20px">
+          <FloatingLabelDropDown
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            isActive={!!active}
+            placeholder="Bats"
+            items={(hands as unknown) as Item[]}
+            value={{ id: Math.random(), name: value }}
+            isRequire
+          />
+        </Flex>
+      </Validation>
     )}
   </Field>
 );
@@ -319,33 +423,27 @@ const SelectSchool: VFC = () => {
   });
 
   return (
-    <Field<Readonly<School>[]>
+    <Field<School>
       name="school"
       // eslint-disable-next-line
-      //@ts-ignore
+      // @ts-ignore
       parse={(value: string) =>
-        data?.schools?.schools?.filter(
-          (s) => s?.name && value.includes(s.name)
-        ) ?? []
+        data &&
+        data.schools?.schools &&
+        data.schools.schools.find((y) => y?.name === value)
       }
-      format={(value) => value ?? []}
     >
-      {
-        /* eslint-disable-next-line */ ({
-          input: { onChange, onFocus, onBlur, value },
-          meta: { active },
-        }) => (
-          <FloatingLabelMultiDropDown
-            items={((data?.schools?.schools ?? []) as unknown) as Item[]}
-            values={(value as unknown) as Item[]}
-            onChange={onChange}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            isActive={!!active}
-            placeholder="Schools"
-          />
-        )
-      }
+      {({ input: { onChange, onFocus, onBlur, value }, meta: { active } }) => (
+        <FloatingLabelDropDown
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          isActive={!!active}
+          placeholder="School Year"
+          items={(data?.schools?.schools as unknown) as Item[]}
+          value={(value as unknown) as Item}
+        />
+      )}
     </Field>
   );
 };
@@ -374,9 +472,12 @@ const years = [
 ] as const;
 
 const SelectSchoolYear: VFC = () => (
-  <Field<typeof years[number]>
+  <Field<string>
     name="school year"
-    parse={(value: string) => years.find((y) => y?.name === value)!}
+    parse={(value: string) => years.find((y) => y?.name === value)!.slug}
+    format={(value: string) =>
+      value && years.find((y) => y?.slug === value)!.name
+    }
   >
     {({ input: { onChange, onFocus, onBlur, value }, meta: { active } }) => (
       <FloatingLabelDropDown
@@ -386,7 +487,7 @@ const SelectSchoolYear: VFC = () => (
         isActive={!!active}
         placeholder="School Year"
         items={(years as unknown) as Item[]}
-        value={{ id: Math.random(), name: value.name }}
+        value={{ id: Math.random(), name: value }}
       />
     )}
   </Field>
@@ -535,8 +636,43 @@ const SaveButton = styled.button`
   margin-right: 0;
 `;
 
-const EditProfile = () => {
-  const onSubmit = async (values: EditProfileValues) => Promise.resolve();
+interface EditProfile {
+  onCancel: () => void;
+  id: string;
+}
+
+const EditProfile: VFC<EditProfile> = ({ onCancel, id }) => {
+  const [updateProfile] = useUpdateProfileMutation();
+
+  const onSubmit = async (values: EditProfileValues) => {
+    console.log(JSON.stringify(values));
+
+    const prepare = {
+      avatar: values.avatar,
+      feet: values.feet,
+      inches: values.inches,
+      weight: values.weight,
+      age: values.age,
+      school_year: values.schoolYear,
+      biography: values.description,
+      position: values.position,
+      position2: values.secondaryPosition,
+      first_name: values.firstName,
+      last_name: values.lastName,
+      bats_hand: values.bats,
+      throws_hand: values.throws,
+      id,
+      school: { id: values.school.id, name: values.school.name },
+      teams: values.team.map((t) => ({ id: t.id, name: t.name })),
+      facilities: values.facility.map((f) => ({ id: f.id, u_name: f.u_name })),
+    };
+
+    await updateProfile({
+      variables: {
+        form: prepare,
+      },
+    });
+  };
 
   return (
     <EditProfileContainer
@@ -552,10 +688,14 @@ const EditProfile = () => {
     >
       <Form
         onSubmit={onSubmit}
+        debug={(state) => console.log(JSON.stringify(state, null, '\t'))}
         validate={validateFormValues(EditProfileSchema)}
         mutators={{
           onChangePosition: ([value], state, tools) => {
             tools.changeValue(state, 'position', () => value as string);
+          },
+          onChangeAvatar: ([value], state, tools) => {
+            tools.changeValue(state, 'avatar', () => value as string);
           },
         }}
         initialValue={{
@@ -564,28 +704,29 @@ const EditProfile = () => {
         render={({
           handleSubmit,
           form: {
-            mutators: { onChangePosition },
+            mutators: { onChangeAvatar },
+            reset,
           },
-          values: { position },
+          values: { avatar },
+          submitting,
+          pristine,
         }) => (
           <form onSubmit={handleSubmit}>
-            <ChoosePhoto />
-            <Floating mb="20px" justifyContent="space-between">
+            <ChoosePhoto onChange={onChangeAvatar} />
+            <Floating justifyContent="space-between">
               <FirstName />
               <LastName />
             </Floating>
             <SelectPosition />
             <SelectSecondaryPosition />
             <FormSectionHeader>Personal Info</FormSectionHeader>
-
             <Age />
-
-            <Floating mb="20px" justifyContent="space-between">
+            <Floating justifyContent="space-between">
               <Feet />
               <Inches />
             </Floating>
             <Weight />
-            <Floating mb="20px" justifyContent="space-between">
+            <Floating justifyContent="space-between">
               <SelectThrows />
               <SelectBats />
             </Floating>
@@ -597,9 +738,25 @@ const EditProfile = () => {
             <SelectFacilities />
             <FormSectionHeader>About</FormSectionHeader>
             <Description />
+
             <ButtonContainer>
-              <CancelButton>Cancel</CancelButton>
-              <SaveButton>Save</SaveButton>
+              <CancelButton
+                onClick={() => {
+                  reset();
+                  onCancel();
+                }}
+                type="reset"
+                disabled={submitting || pristine}
+              >
+                Cancel
+              </CancelButton>
+              <SaveButton
+                type="submit"
+                onSubmit={handleSubmit}
+                disabled={submitting || pristine}
+              >
+                Save
+              </SaveButton>
             </ButtonContainer>
           </form>
         )}

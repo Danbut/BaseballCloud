@@ -1209,6 +1209,41 @@ export type User = {
   id: Scalars['ID'];
 };
 
+export type BattingLogQueryVariables = Exact<{
+  input: FilterBattingLogInput;
+}>;
+
+export type BattingLogQuery = { __typename?: 'Query' } & {
+  batting_log?: Maybe<
+    { __typename?: 'FilterBattingLogResult' } & Pick<
+      FilterBattingLogResult,
+      'total_count'
+    > & {
+        batting_log?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'BattingData' } & Pick<
+                BattingData,
+                | 'date'
+                | 'pitcher_name'
+                | 'pitcher_handedness'
+                | 'pitch_type'
+                | 'pitch_call'
+                | 'exit_velocity'
+                | 'launch_angle'
+                | 'direction'
+                | 'distance'
+                | 'hit_spin_rate'
+                | 'hang_time'
+                | 'pitcher_datraks_id'
+              >
+            >
+          >
+        >;
+      }
+  >;
+};
+
 export type BattingSummaryQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1603,6 +1638,76 @@ export type UpdateProfileMutation = { __typename?: 'Mutation' } & {
   >;
 };
 
+export const BattingLogDocument = gql`
+  query BattingLog($input: FilterBattingLogInput!) {
+    batting_log(input: $input) {
+      batting_log {
+        date
+        pitcher_name
+        pitcher_handedness
+        pitch_type
+        pitch_call
+        exit_velocity
+        launch_angle
+        direction
+        distance
+        hit_spin_rate
+        hang_time
+        pitcher_datraks_id
+      }
+      total_count
+    }
+  }
+`;
+
+/**
+ * __useBattingLogQuery__
+ *
+ * To run a query within a React component, call `useBattingLogQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBattingLogQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBattingLogQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useBattingLogQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    BattingLogQuery,
+    BattingLogQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<BattingLogQuery, BattingLogQueryVariables>(
+    BattingLogDocument,
+    options
+  );
+}
+export function useBattingLogLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    BattingLogQuery,
+    BattingLogQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<BattingLogQuery, BattingLogQueryVariables>(
+    BattingLogDocument,
+    options
+  );
+}
+export type BattingLogQueryHookResult = ReturnType<typeof useBattingLogQuery>;
+export type BattingLogLazyQueryHookResult = ReturnType<
+  typeof useBattingLogLazyQuery
+>;
+export type BattingLogQueryResult = Apollo.QueryResult<
+  BattingLogQuery,
+  BattingLogQueryVariables
+>;
 export const BattingSummaryDocument = gql`
   query BattingSummary($id: ID!) {
     batting_summary(id: $id) {
