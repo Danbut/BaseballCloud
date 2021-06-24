@@ -8,3 +8,4 @@ export { default as FloatingLabelInput } from './FloatingLabelInput';
 export { default as FloatingLabelDropDown } from './FloatingLabelDropDown';
 export { default as FloatingLabelMultiDropDown } from './FloatingLabelMultiDropDown';
 export { default as FloatingLabelTextArea } from './FloatingLabelTextArea';
+export { default as Spinner } from './Spinner';

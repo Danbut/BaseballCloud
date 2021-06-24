@@ -9,6 +9,7 @@ import {
   FloatingLabelDropDown,
   FloatingLabelMultiDropDown,
   FloatingLabelTextArea,
+  Spinner,
 } from './ui';
 import { BaseballIcon, LogoIcon, CheckboxIcon } from './icons';
 import { Anchor, Box, Flex, Grid, Text } from './primitives';
@@ -32,4 +33,5 @@ export {
   FloatingLabelDropDown,
   FloatingLabelMultiDropDown,
   FloatingLabelTextArea,
+  Spinner,
 };

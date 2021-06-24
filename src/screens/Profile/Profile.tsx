@@ -3,7 +3,7 @@ import Stats from 'components/Stats';
 import { useCurrentProfileQuery } from 'generated';
 import withAuth from 'hocs/withAuth';
 import React, { VFC } from 'react';
-import { ContentContainer } from 'shared';
+import { ContentContainer, Spinner } from 'shared';
 import styled from 'styled-components';
 
 const Main = styled.main`
@@ -134,7 +134,7 @@ const Profile: VFC = () => {
   /* eslint-disable */
   const { loading, data, error } = useCurrentProfileQuery();
 
-  if (loading) return <p>...loading</p>;
+  if (loading) return <Spinner loading={loading} />;
   if (error) return <p>...error</p>;
   return (
     <ContentContainer
