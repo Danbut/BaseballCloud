@@ -10,7 +10,6 @@ import {
   Button,
 } from 'shared';
 import styled from 'styled-components';
-import { avatarBackgroundImage } from 'assets/images';
 import { Field, Form } from 'react-final-form';
 import validateFormValues from 'helpers/validateFormSchema';
 import * as yup from 'yup';
@@ -24,6 +23,7 @@ import {
 } from 'generated';
 
 import { Item } from 'shared/ui/FloatingLabelMultiDropDown/FloatingLabelMultiDropDown';
+import ChoosePhoto from '../ChoosePhoto';
 
 const EditProfileContainer = styled(Flex)`
   grid-area: sidebar;
@@ -31,10 +31,6 @@ const EditProfileContainer = styled(Flex)`
   overflow-x: hidden;
   overflow-y: auto;
 `;
-
-const ChoosePhotoForm = styled(Flex)``;
-
-const Avatar = styled(Box)``;
 
 type EditProfileValues = {
   firstName: string;
@@ -530,16 +526,6 @@ const SaveButton = styled.button`
 const EditProfile = () => {
   const onSubmit = async (values: EditProfileValues) => Promise.resolve();
 
-  const onImageChange = (event: any) => {
-    // eslint-disable-next-line
-    if (event.target.files && event.target.files[0]) {
-      // eslint-disable-next-line
-      let img = event.target.files[0];
-      const url = URL.createObjectURL(img);
-      console.log(url);
-    }
-  };
-
   return (
     <EditProfileContainer
       as="aside"
@@ -552,25 +538,7 @@ const EditProfile = () => {
       flexDirection="column"
       flex="1"
     >
-      <ChoosePhotoForm
-        as="form"
-        flexDirection="column"
-        alignItems="center"
-        mb="23px"
-      >
-        <Avatar
-          mb="8px"
-          overflow="hidden"
-          borderRadius="50%"
-          backgroundImage={`url(${avatarBackgroundImage})`}
-          width="100px"
-          height="100px"
-          backgroundSize="cover"
-          backgroundPosition="50% 50%"
-        />
-        <Text>Choose Photo</Text>
-        <input type="file" name="photo" onChange={onImageChange} />
-      </ChoosePhotoForm>
+      <ChoosePhoto />
       <Form
         onSubmit={onSubmit}
         validate={validateFormValues(EditProfileSchema)}

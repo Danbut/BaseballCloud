@@ -1,4 +1,4 @@
-import EditProfile from 'components/EditProfile';
+import EditProfile from 'components/profile/EditProfile';
 import Stats from 'components/Stats';
 import { useCurrentProfileQuery } from 'generated';
 import withAuth from 'hocs/withAuth';
