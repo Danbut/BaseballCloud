@@ -1,13 +1,10 @@
 import React, { FC, VFC } from 'react';
 import {
   Flex,
-  Box,
-  Text,
   FloatingLabelDropDown,
   FloatingLabelInput,
   FloatingLabelMultiDropDown,
   FloatingLabelTextArea,
-  Button,
 } from 'shared';
 import styled from 'styled-components';
 import { Field, Form } from 'react-final-form';
@@ -52,30 +49,37 @@ type EditProfileValues = {
 
 const EditProfileSchema = yup.object().shape({});
 
+const SectionDivider = styled(Flex)`
+  position: relative;
+  :before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e7ebef;
+    z-index: 0;
+  }
+`;
+
+const SectionTitle = styled.h4`
+  font-size: 18px;
+  font-weight: 900;
+  color: #414f5a;
+  text-align: left;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  padding-right: 12px;
+  background-color: #ffffff;
+`;
+
 const FormSectionHeader: FC<{ children: string }> = ({ children }) => (
-  <Flex mb="15px">{children}</Flex>
+  <SectionDivider mb="15px">
+    <SectionTitle>{children}</SectionTitle>
+  </SectionDivider>
 );
-
-// color: #333;
-// font-size: 1.6rem;
-// font-family: 'Lato', sans-serif;
-// -webkit-font-smoothing: antialiased;
-// background-repeat: no-repeat;
-// box-sizing: inherit;
-// display: flex;
-// margin-bottom: 15px;
-// position: relative;
-
-// line-height: 1.25;
-// font-size: 18px;
-// font-weight: 900;
-// color: #414f5a;
-// text-align: left;
-// display: inline-block;
-// position: relative;
-// z-index: 1;
-// background-color: #ffffff;
-// padding-right: 12px;
 
 const Floating = styled(Flex)`
   > * {
@@ -184,20 +188,20 @@ const SelectSecondaryPosition: VFC = () => (
 );
 
 const Age: VFC = () => (
-  <Field<string> name="age">
-    {({
-      input: { onChange, onFocus, onBlur },
-      meta: { error, active, touched },
-    }) => (
-      <FloatingLabelInput
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Age"
-      />
-    )}
-  </Field>
+  <Flex mb="20px">
+    <Field<string> name="age">
+      {({ input: { onChange, onFocus, onBlur }, meta: { active } }) => (
+        <FloatingLabelInput
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          isActive={!!active}
+          placeholder="Age"
+          isRequire
+        />
+      )}
+    </Field>
+  </Flex>
 );
 
 const Feet: VFC = () => (
@@ -212,6 +216,7 @@ const Feet: VFC = () => (
         onBlur={onBlur}
         isActive={!!active}
         placeholder="Feet"
+        isRequire
       />
     )}
   </Field>
@@ -235,20 +240,23 @@ const Inches: VFC = () => (
 );
 
 const Weight: VFC = () => (
-  <Field<string> name="weight">
-    {({
-      input: { onChange, onFocus, onBlur },
-      meta: { error, active, touched },
-    }) => (
-      <FloatingLabelInput
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Weight"
-      />
-    )}
-  </Field>
+  <Flex mb="20px">
+    <Field<string> name="weight">
+      {({
+        input: { onChange, onFocus, onBlur },
+        meta: { error, active, touched },
+      }) => (
+        <FloatingLabelInput
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          isActive={!!active}
+          placeholder="Weight"
+          isRequire
+        />
+      )}
+    </Field>
+  </Flex>
 );
 
 const hands = [
@@ -273,9 +281,10 @@ const SelectThrows: VFC = () => (
         onFocus={onFocus}
         onBlur={onBlur}
         isActive={!!active}
-        placeholder="throws"
+        placeholder="Throws"
         items={(hands as unknown) as Item[]}
         value={{ id: Math.random(), name: value.name }}
+        isRequire
       />
     )}
   </Field>
@@ -292,9 +301,10 @@ const SelectBats: VFC = () => (
         onFocus={onFocus}
         onBlur={onBlur}
         isActive={!!active}
-        placeholder="bats"
+        placeholder="Bats"
         items={(hands as unknown) as Item[]}
         value={{ id: Math.random(), name: value.name }}
+        isRequire
       />
     )}
   </Field>
@@ -471,17 +481,19 @@ const SelectFacilities: VFC = () => {
 };
 
 const Description: VFC = () => (
-  <Field<string> name="description">
-    {({ input: { onChange, onFocus, onBlur }, meta: { active } }) => (
-      <FloatingLabelTextArea
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        isActive={!!active}
-        placeholder="Description yourself in a few words"
-      />
-    )}
-  </Field>
+  <Flex mb="20px">
+    <Field<string> name="description">
+      {({ input: { onChange, onFocus, onBlur }, meta: { active } }) => (
+        <FloatingLabelTextArea
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          isActive={!!active}
+          placeholder="Description yourself in a few words"
+        />
+      )}
+    </Field>
+  </Flex>
 );
 
 const ButtonContainer = styled.div`
@@ -538,7 +550,6 @@ const EditProfile = () => {
       flexDirection="column"
       flex="1"
     >
-      <ChoosePhoto />
       <Form
         onSubmit={onSubmit}
         validate={validateFormValues(EditProfileSchema)}
@@ -558,6 +569,7 @@ const EditProfile = () => {
           values: { position },
         }) => (
           <form onSubmit={handleSubmit}>
+            <ChoosePhoto />
             <Floating mb="20px" justifyContent="space-between">
               <FirstName />
               <LastName />
@@ -565,12 +577,18 @@ const EditProfile = () => {
             <SelectPosition />
             <SelectSecondaryPosition />
             <FormSectionHeader>Personal Info</FormSectionHeader>
+
             <Age />
-            <Feet />
-            <Inches />
+
+            <Floating mb="20px" justifyContent="space-between">
+              <Feet />
+              <Inches />
+            </Floating>
             <Weight />
-            <SelectThrows />
-            <SelectBats />
+            <Floating mb="20px" justifyContent="space-between">
+              <SelectThrows />
+              <SelectBats />
+            </Floating>
             <FormSectionHeader>School</FormSectionHeader>
             <SelectSchool />
             <SelectSchoolYear />
