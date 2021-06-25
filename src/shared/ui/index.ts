@@ -9,3 +9,6 @@ export { default as FloatingLabelDropDown } from './FloatingLabelDropDown';
 export { default as FloatingLabelMultiDropDown } from './FloatingLabelMultiDropDown';
 export { default as FloatingLabelTextArea } from './FloatingLabelTextArea';
 export { default as Spinner } from './Spinner';
+export { default as DatePicker } from './DatePicker';
+export { default as Select } from './Select';
+export { default as Search } from './Search';

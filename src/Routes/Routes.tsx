@@ -44,6 +44,7 @@ const GlobalStyle = createGlobalStyle`
       color: #333;
       line-height: 1.1;
       -webkit-font-smoothing: antialiased;
+      overflow: hidden;
     }
     #root {
       height: 100%;

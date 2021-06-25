@@ -22,14 +22,13 @@ import {
 } from 'generated';
 
 import { Item } from 'shared/ui/FloatingLabelMultiDropDown/FloatingLabelMultiDropDown';
+import { positions, hands, years } from 'values';
 import ChoosePhoto from '../ChoosePhoto';
 
-const EditProfileContainer = styled(Flex)`
-  grid-area: sidebar;
-  grid-column: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-`;
+interface EditProfile {
+  onCancel: () => void;
+  id: string;
+}
 
 type EditProfileValues = {
   firstName: string;
@@ -77,43 +76,128 @@ const EditProfileSchema = yup.object().shape({
   bats: yup.string().required('Bats is required.'),
 });
 
-const SectionDivider = styled(Flex)`
-  position: relative;
-  :before {
-    content: '';
-    position: absolute;
-    top: 36px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: #e7ebef;
-    z-index: 0;
-  }
-`;
+const EditProfile: VFC<EditProfile> = ({ onCancel, id }) => {
+  const [updateProfile] = useUpdateProfileMutation();
 
-const SectionTitle = styled.h4`
-  font-size: 18px;
-  font-weight: 900;
-  color: #414f5a;
-  text-align: left;
-  display: inline-block;
-  position: relative;
-  z-index: 1;
-  padding-right: 12px;
-  background-color: #ffffff;
-`;
+  const onSubmit = async (values: EditProfileValues) => {
+    console.log(JSON.stringify(values));
 
-const FormSectionHeader: FC<{ children: string }> = ({ children }) => (
-  <SectionDivider mb="15px">
-    <SectionTitle>{children}</SectionTitle>
-  </SectionDivider>
-);
+    const prepare = {
+      avatar: values.avatar,
+      feet: values.feet,
+      inches: values.inches,
+      weight: values.weight,
+      age: values.age,
+      school_year: values.schoolYear,
+      biography: values.description,
+      position: values.position,
+      position2: values.secondaryPosition,
+      first_name: values.firstName,
+      last_name: values.lastName,
+      bats_hand: values.bats,
+      throws_hand: values.throws,
+      id,
+      school: { id: values.school.id, name: values.school.name },
+      teams: values.team.map((t) => ({ id: t.id, name: t.name })),
+      facilities: values.facility.map((f) => ({ id: f.id, u_name: f.u_name })),
+    };
 
-const Floating = styled(Flex)`
-  > * {
-    flex-basis: 48%;
-  }
-`;
+    await updateProfile({
+      variables: {
+        form: prepare,
+      },
+    });
+  };
+
+  return (
+    <EditProfileContainer
+      as="aside"
+      bg="white"
+      width={['100vw', '200px']}
+      p="16px"
+      borderLeft="1px solid rgba(0, 0, 0, 0.1)"
+      borderRight="1px solid rgba(0, 0, 0, 0.1)"
+      boxShadow="0 2px 15px 0 rgb(0 0 0 / 10%)"
+      flexDirection="column"
+      flex="1"
+    >
+      <Form
+        onSubmit={onSubmit}
+        debug={(state) => console.log(JSON.stringify(state, null, '\t'))}
+        validate={validateFormValues(EditProfileSchema)}
+        mutators={{
+          onChangePosition: ([value], state, tools) => {
+            tools.changeValue(state, 'position', () => value as string);
+          },
+          onChangeAvatar: ([value], state, tools) => {
+            tools.changeValue(state, 'avatar', () => value as string);
+          },
+        }}
+        initialValue={{
+          position: '',
+        }}
+        render={({
+          handleSubmit,
+          form: {
+            mutators: { onChangeAvatar },
+            reset,
+          },
+          values: { avatar },
+          submitting,
+          pristine,
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <ChoosePhoto onChange={onChangeAvatar} />
+            <Floating justifyContent="space-between">
+              <FirstName />
+              <LastName />
+            </Floating>
+            <SelectPosition />
+            <SelectSecondaryPosition />
+            <FormSectionHeader>Personal Info</FormSectionHeader>
+            <Age />
+            <Floating justifyContent="space-between">
+              <Feet />
+              <Inches />
+            </Floating>
+            <Weight />
+            <Floating justifyContent="space-between">
+              <SelectThrows />
+              <SelectBats />
+            </Floating>
+            <FormSectionHeader>School</FormSectionHeader>
+            <SelectSchool />
+            <SelectSchoolYear />
+            <SelectTeams />
+            <FormSectionHeader>Facility</FormSectionHeader>
+            <SelectFacilities />
+            <FormSectionHeader>About</FormSectionHeader>
+            <Description />
+
+            <ButtonContainer>
+              <CancelButton
+                onClick={() => {
+                  reset();
+                  onCancel();
+                }}
+                type="reset"
+              >
+                Cancel
+              </CancelButton>
+              <SaveButton
+                type="submit"
+                onSubmit={handleSubmit}
+                disabled={submitting || pristine}
+              >
+                Save
+              </SaveButton>
+            </ButtonContainer>
+          </form>
+        )}
+      />
+    </EditProfileContainer>
+  );
+};
 
 const FirstName: VFC = () => (
   <Field<string> name="firstName">
@@ -158,37 +242,6 @@ const LastName: VFC = () => (
     )}
   </Field>
 );
-
-const positions = [
-  {
-    slug: 'catcher',
-    name: 'Catcher',
-  },
-  {
-    slug: 'first_base',
-    name: 'First Base',
-  },
-  {
-    slug: 'second_base',
-    name: 'Second Base',
-  },
-  {
-    slug: 'shortstop',
-    name: 'Shortstop',
-  },
-  {
-    slug: 'third_base',
-    name: 'Third Base',
-  },
-  {
-    slug: 'outfield',
-    name: 'Outfield',
-  },
-  {
-    slug: 'pitcher',
-    name: 'Pitcher',
-  },
-] as const;
 
 const SelectPosition: VFC = () => (
   <Field<string>
@@ -343,17 +396,6 @@ const Weight: VFC = () => (
   </Field>
 );
 
-const hands = [
-  {
-    slug: 'l',
-    name: 'L',
-  },
-  {
-    slug: 'r',
-    name: 'R',
-  },
-] as const;
-
 const SelectThrows: VFC = () => (
   <Field<string>
     name="throws"
@@ -447,29 +489,6 @@ const SelectSchool: VFC = () => {
     </Field>
   );
 };
-
-const years = [
-  {
-    slug: 'freshman',
-    name: 'Freshman',
-  },
-  {
-    slug: 'sophomore',
-    name: 'Sophomore',
-  },
-  {
-    slug: 'junior',
-    name: 'Junior',
-  },
-  {
-    slug: 'senior',
-    name: 'Senior',
-  },
-  {
-    slug: 'none',
-    name: 'None',
-  },
-] as const;
 
 const SelectSchoolYear: VFC = () => (
   <Field<string>
@@ -636,133 +655,49 @@ const SaveButton = styled.button`
   margin-right: 0;
 `;
 
-interface EditProfile {
-  onCancel: () => void;
-  id: string;
-}
+const EditProfileContainer = styled(Flex)`
+  grid-area: sidebar;
+  grid-column: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+`;
 
-const EditProfile: VFC<EditProfile> = ({ onCancel, id }) => {
-  const [updateProfile] = useUpdateProfileMutation();
+const SectionDivider = styled(Flex)`
+  position: relative;
+  :before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e7ebef;
+    z-index: 0;
+  }
+`;
 
-  const onSubmit = async (values: EditProfileValues) => {
-    console.log(JSON.stringify(values));
+const SectionTitle = styled.h4`
+  font-size: 18px;
+  font-weight: 900;
+  color: #414f5a;
+  text-align: left;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  padding-right: 12px;
+  background-color: #ffffff;
+`;
 
-    const prepare = {
-      avatar: values.avatar,
-      feet: values.feet,
-      inches: values.inches,
-      weight: values.weight,
-      age: values.age,
-      school_year: values.schoolYear,
-      biography: values.description,
-      position: values.position,
-      position2: values.secondaryPosition,
-      first_name: values.firstName,
-      last_name: values.lastName,
-      bats_hand: values.bats,
-      throws_hand: values.throws,
-      id,
-      school: { id: values.school.id, name: values.school.name },
-      teams: values.team.map((t) => ({ id: t.id, name: t.name })),
-      facilities: values.facility.map((f) => ({ id: f.id, u_name: f.u_name })),
-    };
+const FormSectionHeader: FC<{ children: string }> = ({ children }) => (
+  <SectionDivider mb="15px">
+    <SectionTitle>{children}</SectionTitle>
+  </SectionDivider>
+);
 
-    await updateProfile({
-      variables: {
-        form: prepare,
-      },
-    });
-  };
-
-  return (
-    <EditProfileContainer
-      as="aside"
-      bg="white"
-      width={['100vw', '200px']}
-      p="16px"
-      borderLeft="1px solid rgba(0, 0, 0, 0.1)"
-      borderRight="1px solid rgba(0, 0, 0, 0.1)"
-      boxShadow="0 2px 15px 0 rgb(0 0 0 / 10%)"
-      flexDirection="column"
-      flex="1"
-    >
-      <Form
-        onSubmit={onSubmit}
-        debug={(state) => console.log(JSON.stringify(state, null, '\t'))}
-        validate={validateFormValues(EditProfileSchema)}
-        mutators={{
-          onChangePosition: ([value], state, tools) => {
-            tools.changeValue(state, 'position', () => value as string);
-          },
-          onChangeAvatar: ([value], state, tools) => {
-            tools.changeValue(state, 'avatar', () => value as string);
-          },
-        }}
-        initialValue={{
-          position: '',
-        }}
-        render={({
-          handleSubmit,
-          form: {
-            mutators: { onChangeAvatar },
-            reset,
-          },
-          values: { avatar },
-          submitting,
-          pristine,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <ChoosePhoto onChange={onChangeAvatar} />
-            <Floating justifyContent="space-between">
-              <FirstName />
-              <LastName />
-            </Floating>
-            <SelectPosition />
-            <SelectSecondaryPosition />
-            <FormSectionHeader>Personal Info</FormSectionHeader>
-            <Age />
-            <Floating justifyContent="space-between">
-              <Feet />
-              <Inches />
-            </Floating>
-            <Weight />
-            <Floating justifyContent="space-between">
-              <SelectThrows />
-              <SelectBats />
-            </Floating>
-            <FormSectionHeader>School</FormSectionHeader>
-            <SelectSchool />
-            <SelectSchoolYear />
-            <SelectTeams />
-            <FormSectionHeader>Facility</FormSectionHeader>
-            <SelectFacilities />
-            <FormSectionHeader>About</FormSectionHeader>
-            <Description />
-
-            <ButtonContainer>
-              <CancelButton
-                onClick={() => {
-                  reset();
-                  onCancel();
-                }}
-                type="reset"
-                disabled={submitting || pristine}
-              >
-                Cancel
-              </CancelButton>
-              <SaveButton
-                type="submit"
-                onSubmit={handleSubmit}
-                disabled={submitting || pristine}
-              >
-                Save
-              </SaveButton>
-            </ButtonContainer>
-          </form>
-        )}
-      />
-    </EditProfileContainer>
-  );
-};
+const Floating = styled(Flex)`
+  > * {
+    flex-basis: 48%;
+  }
+`;
 
 export default EditProfile;

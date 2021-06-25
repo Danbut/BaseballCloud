@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { avatarBackgroundImage } from 'assets/images';
 import { Box, Flex } from 'shared';
-import { useState, VFC } from 'react';
+import React, { useState, VFC } from 'react';
 import Auth from 'services/api';
+import Avatar from '../Avatar';
 
 const ChoosePhotoInput = styled.input`
   display: none;
@@ -40,20 +41,7 @@ const ChoosePhoto: VFC<ChoosePhotoProps> = ({ onChange }) => {
 
   return (
     <Flex as="form" flexDirection="column" alignItems="center" mb="23px">
-      <Box
-        mb="8px"
-        overflow="hidden"
-        borderRadius="50%"
-        backgroundImage={
-          pictureInfo
-            ? `url(${URL.createObjectURL(pictureInfo)})`
-            : `url(${avatarBackgroundImage})`
-        }
-        width="100px"
-        height="100px"
-        backgroundSize="cover"
-        backgroundPosition="50% 50%"
-      />
+      <Avatar pictureUrl={pictureInfo && URL.createObjectURL(pictureInfo)} />
       {!isUpload && (
         <>
           <ChoosePhotoInput type="file" id="photo" onChange={onChangePhoto} />

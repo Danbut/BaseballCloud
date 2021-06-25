@@ -1,5 +1,5 @@
 import { authBackgroundImage } from 'assets/images';
-import RoleSwitch from 'components/RoleSwitch';
+import RoleSwitch from 'components/auth';
 import validateFormValues from 'helpers/validateFormSchema';
 import React, { VFC } from 'react';
 import { Field, Form } from 'react-final-form';

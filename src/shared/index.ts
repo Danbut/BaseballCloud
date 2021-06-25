@@ -10,6 +10,9 @@ import {
   FloatingLabelMultiDropDown,
   FloatingLabelTextArea,
   Spinner,
+  DatePicker,
+  Search,
+  Select,
 } from './ui';
 import { BaseballIcon, LogoIcon, CheckboxIcon } from './icons';
 import { Anchor, Box, Flex, Grid, Text } from './primitives';
@@ -34,4 +37,7 @@ export {
   FloatingLabelMultiDropDown,
   FloatingLabelTextArea,
   Spinner,
+  DatePicker,
+  Search,
+  Select,
 };
