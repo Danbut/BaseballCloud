@@ -1,0 +1,15 @@
+schema:
+  - https://baseballcloud-back.herokuapp.com/api/v1/graphql:
+      headers:
+        - access-token: 7gVv6MumBq_Z378VZROe3w
+        - client: qM13uRGw-F7ByqgIbPTeFQ
+        - uid: daniel.buterus@purrweb.com
+documents: './src/**/*.graphql'
+generates:
+  ./src/generated/index.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true
