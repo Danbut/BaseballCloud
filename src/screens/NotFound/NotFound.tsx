@@ -1,11 +1,6 @@
 import encodeSvg from 'helpers/encodeSvg';
 import React, { VFC } from 'react';
-import styled from 'styled-components';
-import { BaseballIcon, Box, Flex, Text } from 'shared';
-
-const ContentContainer = styled(Flex)`
-  grid-area: content;
-`;
+import { BaseballIcon, Box, ContentContainer, Flex, Text } from 'shared';
 
 const NotFound: VFC = () => (
   <ContentContainer

@@ -1209,9 +1209,164 @@ export type User = {
   id: Scalars['ID'];
 };
 
-export type ProfileQueryVariables = Exact<{ [key: string]: never }>;
+export type UpdateProfileMutationVariables = Exact<{
+  form: UpdateProfileInput;
+}>;
 
-export type ProfileQuery = { __typename?: 'Query' } & {
+export type UpdateProfileMutation = { __typename?: 'Mutation' } & {
+  update_profile?: Maybe<
+    { __typename?: 'UpdateProfilePayload' } & {
+      profile?: Maybe<
+        { __typename?: 'Profile' } & Pick<
+          Profile,
+          | 'id'
+          | 'first_name'
+          | 'last_name'
+          | 'position'
+          | 'position2'
+          | 'avatar'
+          | 'throws_hand'
+          | 'bats_hand'
+          | 'biography'
+          | 'school_year'
+          | 'feet'
+          | 'inches'
+          | 'weight'
+          | 'age'
+        > & {
+            recent_events?: Maybe<
+              Array<
+                Maybe<
+                  { __typename?: 'Event' } & Pick<
+                    Event,
+                    'id' | 'event_type' | 'event_name' | 'date'
+                  > & {
+                      recent_avatars?: Maybe<
+                        Array<
+                          Maybe<
+                            { __typename?: 'RecentAvatarsType' } & Pick<
+                              RecentAvatarsType,
+                              'id' | 'first_name' | 'last_name' | 'avatar'
+                            >
+                          >
+                        >
+                      >;
+                    }
+                >
+              >
+            >;
+            school?: Maybe<
+              { __typename?: 'School' } & Pick<School, 'id' | 'name'>
+            >;
+            teams?: Maybe<
+              Array<Maybe<{ __typename?: 'Team' } & Pick<Team, 'id' | 'name'>>>
+            >;
+            facilities?: Maybe<
+              Array<
+                Maybe<
+                  { __typename?: 'Facility' } & Pick<
+                    Facility,
+                    'id' | 'email' | 'u_name'
+                  >
+                >
+              >
+            >;
+          }
+      >;
+    }
+  >;
+};
+
+export type BattingGraphQueryVariables = Exact<{
+  input: FilterGraphInput;
+}>;
+
+export type BattingGraphQuery = { __typename?: 'Query' } & {
+  batting_graph?: Maybe<
+    { __typename?: 'FilterGraphResultType' } & Pick<
+      FilterGraphResultType,
+      'graph_rows'
+    >
+  >;
+};
+
+export type BattingLogQueryVariables = Exact<{
+  input: FilterBattingLogInput;
+}>;
+
+export type BattingLogQuery = { __typename?: 'Query' } & {
+  batting_log?: Maybe<
+    { __typename?: 'FilterBattingLogResult' } & Pick<
+      FilterBattingLogResult,
+      'total_count'
+    > & {
+        batting_log?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'BattingData' } & Pick<
+                BattingData,
+                | 'date'
+                | 'pitcher_name'
+                | 'pitcher_handedness'
+                | 'pitch_type'
+                | 'pitch_call'
+                | 'exit_velocity'
+                | 'launch_angle'
+                | 'direction'
+                | 'distance'
+                | 'hit_spin_rate'
+                | 'hang_time'
+                | 'pitcher_datraks_id'
+              >
+            >
+          >
+        >;
+      }
+  >;
+};
+
+export type BattingSummaryQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type BattingSummaryQuery = { __typename?: 'Query' } & {
+  batting_summary?: Maybe<
+    { __typename?: 'SummaryResult' } & {
+      top_values?: Maybe<
+        Array<
+          Maybe<
+            { __typename?: 'FlightScopeDataRowType' } & Pick<
+              FlightScopeDataRowType,
+              | 'id'
+              | 'distance'
+              | 'pitch_type'
+              | 'launch_angle'
+              | 'exit_velocity'
+            >
+          >
+        >
+      >;
+      average_values?: Maybe<
+        Array<
+          Maybe<
+            { __typename?: 'FlightScopeDataRowType' } & Pick<
+              FlightScopeDataRowType,
+              | 'id'
+              | 'distance'
+              | 'pitch_type'
+              | 'launch_angle'
+              | 'exit_velocity'
+            >
+          >
+        >
+      >;
+    }
+  >;
+};
+
+export type CurrentProfileQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CurrentProfileQuery = { __typename?: 'Query' } & {
   current_profile?: Maybe<
     { __typename?: 'Profile' } & Pick<
       Profile,
@@ -1248,8 +1403,572 @@ export type ProfileQuery = { __typename?: 'Query' } & {
   >;
 };
 
-export const ProfileDocument = gql`
-  query Profile {
+export type FacilitiesQueryVariables = Exact<{
+  search: Scalars['String'];
+}>;
+
+export type FacilitiesQuery = { __typename?: 'Query' } & {
+  facilities?: Maybe<
+    { __typename?: 'FacilityRowsResult' } & {
+      facilities?: Maybe<
+        Array<
+          Maybe<
+            { __typename?: 'Facility' } & Pick<
+              Facility,
+              'id' | 'email' | 'u_name'
+            >
+          >
+        >
+      >;
+    }
+  >;
+};
+
+export type LeaderboardBattingQueryVariables = Exact<{
+  input: FilterLeaderboardInput;
+}>;
+
+export type LeaderboardBattingQuery = { __typename?: 'Query' } & {
+  leaderboard_batting?: Maybe<
+    { __typename?: 'FilterLeaderboardBattingResult' } & {
+      leaderboard_batting?: Maybe<
+        Array<
+          Maybe<
+            { __typename?: 'FlightScopeDataRowType' } & Pick<
+              FlightScopeDataRowType,
+              | 'batter_name'
+              | 'exit_velocity'
+              | 'launch_angle'
+              | 'distance'
+              | 'batter_datraks_id'
+              | 'age'
+              | 'favorite'
+            > & {
+                school?: Maybe<
+                  { __typename?: 'School' } & Pick<School, 'id' | 'name'>
+                >;
+                teams?: Maybe<
+                  Array<
+                    Maybe<{ __typename?: 'Team' } & Pick<Team, 'id' | 'name'>>
+                  >
+                >;
+              }
+          >
+        >
+      >;
+    }
+  >;
+};
+
+export type NotificationsQueryVariables = Exact<{
+  input: FilterNotificationsInput;
+}>;
+
+export type NotificationsQuery = { __typename?: 'Query' } & {
+  notifications?: Maybe<
+    { __typename?: 'NotificationRowsResult' } & {
+      notifications?: Maybe<
+        Array<
+          Maybe<
+            { __typename?: 'Notification' } & Pick<
+              Notification,
+              'id' | 'description' | 'link'
+            >
+          >
+        >
+      >;
+    }
+  >;
+};
+
+export type ProfileQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type ProfileQuery = { __typename?: 'Query' } & {
+  profile?: Maybe<
+    { __typename?: 'Profile' } & Pick<
+      Profile,
+      | 'id'
+      | 'first_name'
+      | 'last_name'
+      | 'position'
+      | 'position2'
+      | 'school_year'
+      | 'avatar'
+      | 'throws_hand'
+      | 'bats_hand'
+      | 'biography'
+      | 'feet'
+      | 'inches'
+      | 'weight'
+      | 'age'
+      | 'winsgspan'
+      | 'grip_right'
+      | 'grip_left'
+      | 'wrist_to_elbow'
+      | 'broad_jump'
+      | 'act_score'
+      | 'gpa_score'
+      | 'sat_score'
+      | 'favorite'
+      | 'events_opened'
+      | 'paid'
+    > & {
+        recent_events?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Event' } & Pick<
+                Event,
+                | 'id'
+                | 'event_type'
+                | 'event_name'
+                | 'date'
+                | 'is_pitcher'
+                | 'data_rows_count'
+              > & {
+                  recent_avatars?: Maybe<
+                    Array<
+                      Maybe<
+                        { __typename?: 'RecentAvatarsType' } & Pick<
+                          RecentAvatarsType,
+                          'id' | 'first_name' | 'last_name' | 'avatar'
+                        >
+                      >
+                    >
+                  >;
+                }
+            >
+          >
+        >;
+        batting_top_values?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'FlightScopeDataRowType' } & Pick<
+                FlightScopeDataRowType,
+                'pitch_type' | 'distance' | 'launch_angle' | 'exit_velocity'
+              >
+            >
+          >
+        >;
+        pitching_top_values?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'FlightScopeDataRowType' } & Pick<
+                FlightScopeDataRowType,
+                'velocity' | 'spin_rate' | 'pitch_type'
+              >
+            >
+          >
+        >;
+        pitcher_summary?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'FlightScopeDataRowType' } & Pick<
+                FlightScopeDataRowType,
+                'velocity' | 'spin_rate' | 'horizontal_break'
+              >
+            >
+          >
+        >;
+        batter_summary?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'FlightScopeDataRowType' } & Pick<
+                FlightScopeDataRowType,
+                'exit_velocity' | 'distance' | 'launch_angle'
+              >
+            >
+          >
+        >;
+        school?: Maybe<{ __typename?: 'School' } & Pick<School, 'id' | 'name'>>;
+        teams?: Maybe<
+          Array<Maybe<{ __typename?: 'Team' } & Pick<Team, 'id' | 'name'>>>
+        >;
+        facilities?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Facility' } & Pick<
+                Facility,
+                'id' | 'email' | 'u_name'
+              >
+            >
+          >
+        >;
+      }
+  >;
+};
+
+export type ProfileEventsQueryVariables = Exact<{
+  input: FilterProfileEventsInput;
+}>;
+
+export type ProfileEventsQuery = { __typename?: 'Query' } & {
+  profile_events?: Maybe<
+    { __typename?: 'FilterProfileEventsResult' } & Pick<
+      FilterProfileEventsResult,
+      'total_count'
+    > & {
+        events?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Event' } & Pick<
+                Event,
+                'id' | 'date' | 'event_type' | 'event_name'
+              >
+            >
+          >
+        >;
+      }
+  >;
+};
+
+export type ProfileNamesQueryVariables = Exact<{
+  input: FilterProfileNamesInput;
+}>;
+
+export type ProfileNamesQuery = { __typename?: 'Query' } & {
+  profile_names?: Maybe<
+    { __typename?: 'ProfileNamesResultType' } & {
+      profile_names?: Maybe<
+        Array<
+          Maybe<
+            { __typename?: 'Profile' } & Pick<
+              Profile,
+              | 'id'
+              | 'position'
+              | 'first_name'
+              | 'last_name'
+              | 'inches'
+              | 'feet'
+              | 'weight'
+              | 'age'
+            >
+          >
+        >
+      >;
+    }
+  >;
+};
+
+export type SchoolsQueryVariables = Exact<{
+  search: Scalars['String'];
+}>;
+
+export type SchoolsQuery = { __typename?: 'Query' } & {
+  schools?: Maybe<
+    { __typename?: 'SchoolRowsResult' } & {
+      schools?: Maybe<
+        Array<Maybe<{ __typename?: 'School' } & Pick<School, 'id' | 'name'>>>
+      >;
+    }
+  >;
+};
+
+export type TeamsQueryVariables = Exact<{
+  search: Scalars['String'];
+}>;
+
+export type TeamsQuery = { __typename?: 'Query' } & {
+  teams?: Maybe<
+    { __typename?: 'TeamRowsResult' } & {
+      teams?: Maybe<
+        Array<Maybe<{ __typename?: 'Team' } & Pick<Team, 'id' | 'name'>>>
+      >;
+    }
+  >;
+};
+
+export const UpdateProfileDocument = gql`
+  mutation UpdateProfile($form: UpdateProfileInput!) {
+    update_profile(input: $form) {
+      profile {
+        id
+        first_name
+        last_name
+        position
+        position2
+        avatar
+        throws_hand
+        bats_hand
+        biography
+        school_year
+        feet
+        inches
+        weight
+        age
+        recent_events {
+          id
+          event_type
+          event_name
+          date
+          recent_avatars {
+            id
+            first_name
+            last_name
+            avatar
+          }
+        }
+        school {
+          id
+          name
+        }
+        teams {
+          id
+          name
+        }
+        facilities {
+          id
+          email
+          u_name
+        }
+      }
+    }
+  }
+`;
+export type UpdateProfileMutationFn = Apollo.MutationFunction<
+  UpdateProfileMutation,
+  UpdateProfileMutationVariables
+>;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfileMutation, { data, loading, error }] = useUpdateProfileMutation({
+ *   variables: {
+ *      form: // value for 'form'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateProfileMutation,
+    UpdateProfileMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateProfileMutation,
+    UpdateProfileMutationVariables
+  >(UpdateProfileDocument, options);
+}
+export type UpdateProfileMutationHookResult = ReturnType<
+  typeof useUpdateProfileMutation
+>;
+export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
+export type UpdateProfileMutationOptions = Apollo.BaseMutationOptions<
+  UpdateProfileMutation,
+  UpdateProfileMutationVariables
+>;
+export const BattingGraphDocument = gql`
+  query BattingGraph($input: FilterGraphInput!) {
+    batting_graph(input: $input) {
+      graph_rows
+    }
+  }
+`;
+
+/**
+ * __useBattingGraphQuery__
+ *
+ * To run a query within a React component, call `useBattingGraphQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBattingGraphQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBattingGraphQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useBattingGraphQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    BattingGraphQuery,
+    BattingGraphQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<BattingGraphQuery, BattingGraphQueryVariables>(
+    BattingGraphDocument,
+    options
+  );
+}
+export function useBattingGraphLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    BattingGraphQuery,
+    BattingGraphQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<BattingGraphQuery, BattingGraphQueryVariables>(
+    BattingGraphDocument,
+    options
+  );
+}
+export type BattingGraphQueryHookResult = ReturnType<
+  typeof useBattingGraphQuery
+>;
+export type BattingGraphLazyQueryHookResult = ReturnType<
+  typeof useBattingGraphLazyQuery
+>;
+export type BattingGraphQueryResult = Apollo.QueryResult<
+  BattingGraphQuery,
+  BattingGraphQueryVariables
+>;
+export const BattingLogDocument = gql`
+  query BattingLog($input: FilterBattingLogInput!) {
+    batting_log(input: $input) {
+      batting_log {
+        date
+        pitcher_name
+        pitcher_handedness
+        pitch_type
+        pitch_call
+        exit_velocity
+        launch_angle
+        direction
+        distance
+        hit_spin_rate
+        hang_time
+        pitcher_datraks_id
+      }
+      total_count
+    }
+  }
+`;
+
+/**
+ * __useBattingLogQuery__
+ *
+ * To run a query within a React component, call `useBattingLogQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBattingLogQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBattingLogQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useBattingLogQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    BattingLogQuery,
+    BattingLogQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<BattingLogQuery, BattingLogQueryVariables>(
+    BattingLogDocument,
+    options
+  );
+}
+export function useBattingLogLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    BattingLogQuery,
+    BattingLogQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<BattingLogQuery, BattingLogQueryVariables>(
+    BattingLogDocument,
+    options
+  );
+}
+export type BattingLogQueryHookResult = ReturnType<typeof useBattingLogQuery>;
+export type BattingLogLazyQueryHookResult = ReturnType<
+  typeof useBattingLogLazyQuery
+>;
+export type BattingLogQueryResult = Apollo.QueryResult<
+  BattingLogQuery,
+  BattingLogQueryVariables
+>;
+export const BattingSummaryDocument = gql`
+  query BattingSummary($id: ID!) {
+    batting_summary(id: $id) {
+      top_values {
+        id
+        distance
+        pitch_type
+        launch_angle
+        exit_velocity
+      }
+      average_values {
+        id
+        distance
+        pitch_type
+        launch_angle
+        exit_velocity
+      }
+    }
+  }
+`;
+
+/**
+ * __useBattingSummaryQuery__
+ *
+ * To run a query within a React component, call `useBattingSummaryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBattingSummaryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBattingSummaryQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBattingSummaryQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    BattingSummaryQuery,
+    BattingSummaryQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<BattingSummaryQuery, BattingSummaryQueryVariables>(
+    BattingSummaryDocument,
+    options
+  );
+}
+export function useBattingSummaryLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    BattingSummaryQuery,
+    BattingSummaryQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<BattingSummaryQuery, BattingSummaryQueryVariables>(
+    BattingSummaryDocument,
+    options
+  );
+}
+export type BattingSummaryQueryHookResult = ReturnType<
+  typeof useBattingSummaryQuery
+>;
+export type BattingSummaryLazyQueryHookResult = ReturnType<
+  typeof useBattingSummaryLazyQuery
+>;
+export type BattingSummaryQueryResult = Apollo.QueryResult<
+  BattingSummaryQuery,
+  BattingSummaryQueryVariables
+>;
+export const CurrentProfileDocument = gql`
+  query CurrentProfile {
     current_profile {
       id
       first_name
@@ -1283,6 +2002,332 @@ export const ProfileDocument = gql`
 `;
 
 /**
+ * __useCurrentProfileQuery__
+ *
+ * To run a query within a React component, call `useCurrentProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentProfileQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    CurrentProfileQuery,
+    CurrentProfileQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<CurrentProfileQuery, CurrentProfileQueryVariables>(
+    CurrentProfileDocument,
+    options
+  );
+}
+export function useCurrentProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CurrentProfileQuery,
+    CurrentProfileQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<CurrentProfileQuery, CurrentProfileQueryVariables>(
+    CurrentProfileDocument,
+    options
+  );
+}
+export type CurrentProfileQueryHookResult = ReturnType<
+  typeof useCurrentProfileQuery
+>;
+export type CurrentProfileLazyQueryHookResult = ReturnType<
+  typeof useCurrentProfileLazyQuery
+>;
+export type CurrentProfileQueryResult = Apollo.QueryResult<
+  CurrentProfileQuery,
+  CurrentProfileQueryVariables
+>;
+export const FacilitiesDocument = gql`
+  query Facilities($search: String!) {
+    facilities(search: $search) {
+      facilities {
+        id
+        email
+        u_name
+      }
+    }
+  }
+`;
+
+/**
+ * __useFacilitiesQuery__
+ *
+ * To run a query within a React component, call `useFacilitiesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFacilitiesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFacilitiesQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useFacilitiesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FacilitiesQuery,
+    FacilitiesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FacilitiesQuery, FacilitiesQueryVariables>(
+    FacilitiesDocument,
+    options
+  );
+}
+export function useFacilitiesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FacilitiesQuery,
+    FacilitiesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FacilitiesQuery, FacilitiesQueryVariables>(
+    FacilitiesDocument,
+    options
+  );
+}
+export type FacilitiesQueryHookResult = ReturnType<typeof useFacilitiesQuery>;
+export type FacilitiesLazyQueryHookResult = ReturnType<
+  typeof useFacilitiesLazyQuery
+>;
+export type FacilitiesQueryResult = Apollo.QueryResult<
+  FacilitiesQuery,
+  FacilitiesQueryVariables
+>;
+export const LeaderboardBattingDocument = gql`
+  query LeaderboardBatting($input: FilterLeaderboardInput!) {
+    leaderboard_batting(input: $input) {
+      leaderboard_batting {
+        batter_name
+        exit_velocity
+        launch_angle
+        distance
+        batter_datraks_id
+        age
+        school {
+          id
+          name
+        }
+        teams {
+          id
+          name
+        }
+        favorite
+      }
+    }
+  }
+`;
+
+/**
+ * __useLeaderboardBattingQuery__
+ *
+ * To run a query within a React component, call `useLeaderboardBattingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLeaderboardBattingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLeaderboardBattingQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useLeaderboardBattingQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    LeaderboardBattingQuery,
+    LeaderboardBattingQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    LeaderboardBattingQuery,
+    LeaderboardBattingQueryVariables
+  >(LeaderboardBattingDocument, options);
+}
+export function useLeaderboardBattingLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    LeaderboardBattingQuery,
+    LeaderboardBattingQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    LeaderboardBattingQuery,
+    LeaderboardBattingQueryVariables
+  >(LeaderboardBattingDocument, options);
+}
+export type LeaderboardBattingQueryHookResult = ReturnType<
+  typeof useLeaderboardBattingQuery
+>;
+export type LeaderboardBattingLazyQueryHookResult = ReturnType<
+  typeof useLeaderboardBattingLazyQuery
+>;
+export type LeaderboardBattingQueryResult = Apollo.QueryResult<
+  LeaderboardBattingQuery,
+  LeaderboardBattingQueryVariables
+>;
+export const NotificationsDocument = gql`
+  query Notifications($input: FilterNotificationsInput!) {
+    notifications(input: $input) {
+      notifications {
+        id
+        description
+        link
+      }
+    }
+  }
+`;
+
+/**
+ * __useNotificationsQuery__
+ *
+ * To run a query within a React component, call `useNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useNotificationsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    NotificationsQuery,
+    NotificationsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<NotificationsQuery, NotificationsQueryVariables>(
+    NotificationsDocument,
+    options
+  );
+}
+export function useNotificationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    NotificationsQuery,
+    NotificationsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<NotificationsQuery, NotificationsQueryVariables>(
+    NotificationsDocument,
+    options
+  );
+}
+export type NotificationsQueryHookResult = ReturnType<
+  typeof useNotificationsQuery
+>;
+export type NotificationsLazyQueryHookResult = ReturnType<
+  typeof useNotificationsLazyQuery
+>;
+export type NotificationsQueryResult = Apollo.QueryResult<
+  NotificationsQuery,
+  NotificationsQueryVariables
+>;
+export const ProfileDocument = gql`
+  query Profile($id: String!) {
+    profile(id: $id) {
+      id
+      first_name
+      last_name
+      position
+      position2
+      school_year
+      avatar
+      throws_hand
+      bats_hand
+      biography
+      feet
+      inches
+      weight
+      age
+      recent_events {
+        id
+        event_type
+        event_name
+        date
+        is_pitcher
+        data_rows_count
+        recent_avatars {
+          id
+          first_name
+          last_name
+          avatar
+        }
+      }
+      winsgspan
+      grip_right
+      grip_left
+      wrist_to_elbow
+      broad_jump
+      grip_left
+      act_score
+      gpa_score
+      sat_score
+      batting_top_values {
+        pitch_type
+        distance
+        launch_angle
+        exit_velocity
+      }
+      pitching_top_values {
+        velocity
+        spin_rate
+        pitch_type
+      }
+      pitcher_summary {
+        velocity
+        spin_rate
+        horizontal_break
+      }
+      batter_summary {
+        exit_velocity
+        distance
+        launch_angle
+      }
+      school {
+        id
+        name
+      }
+      teams {
+        id
+        name
+      }
+      facilities {
+        id
+        email
+        u_name
+      }
+      favorite
+      events_opened
+      paid
+    }
+  }
+`;
+
+/**
  * __useProfileQuery__
  *
  * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
@@ -1294,11 +2339,12 @@ export const ProfileDocument = gql`
  * @example
  * const { data, loading, error } = useProfileQuery({
  *   variables: {
+ *      id: // value for 'id'
  *   },
  * });
  */
 export function useProfileQuery(
-  baseOptions?: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(
@@ -1320,4 +2366,237 @@ export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
 export type ProfileQueryResult = Apollo.QueryResult<
   ProfileQuery,
   ProfileQueryVariables
+>;
+export const ProfileEventsDocument = gql`
+  query ProfileEvents($input: FilterProfileEventsInput!) {
+    profile_events(input: $input) {
+      events {
+        id
+        date
+        event_type
+        event_name
+      }
+      total_count
+    }
+  }
+`;
+
+/**
+ * __useProfileEventsQuery__
+ *
+ * To run a query within a React component, call `useProfileEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileEventsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useProfileEventsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ProfileEventsQuery,
+    ProfileEventsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileEventsQuery, ProfileEventsQueryVariables>(
+    ProfileEventsDocument,
+    options
+  );
+}
+export function useProfileEventsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfileEventsQuery,
+    ProfileEventsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileEventsQuery, ProfileEventsQueryVariables>(
+    ProfileEventsDocument,
+    options
+  );
+}
+export type ProfileEventsQueryHookResult = ReturnType<
+  typeof useProfileEventsQuery
+>;
+export type ProfileEventsLazyQueryHookResult = ReturnType<
+  typeof useProfileEventsLazyQuery
+>;
+export type ProfileEventsQueryResult = Apollo.QueryResult<
+  ProfileEventsQuery,
+  ProfileEventsQueryVariables
+>;
+export const ProfileNamesDocument = gql`
+  query ProfileNames($input: FilterProfileNamesInput!) {
+    profile_names(input: $input) {
+      profile_names {
+        id
+        position
+        first_name
+        last_name
+        inches
+        feet
+        weight
+        age
+      }
+    }
+  }
+`;
+
+/**
+ * __useProfileNamesQuery__
+ *
+ * To run a query within a React component, call `useProfileNamesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileNamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileNamesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useProfileNamesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ProfileNamesQuery,
+    ProfileNamesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfileNamesQuery, ProfileNamesQueryVariables>(
+    ProfileNamesDocument,
+    options
+  );
+}
+export function useProfileNamesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfileNamesQuery,
+    ProfileNamesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfileNamesQuery, ProfileNamesQueryVariables>(
+    ProfileNamesDocument,
+    options
+  );
+}
+export type ProfileNamesQueryHookResult = ReturnType<
+  typeof useProfileNamesQuery
+>;
+export type ProfileNamesLazyQueryHookResult = ReturnType<
+  typeof useProfileNamesLazyQuery
+>;
+export type ProfileNamesQueryResult = Apollo.QueryResult<
+  ProfileNamesQuery,
+  ProfileNamesQueryVariables
+>;
+export const SchoolsDocument = gql`
+  query Schools($search: String!) {
+    schools(search: $search) {
+      schools {
+        id
+        name
+      }
+    }
+  }
+`;
+
+/**
+ * __useSchoolsQuery__
+ *
+ * To run a query within a React component, call `useSchoolsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSchoolsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSchoolsQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useSchoolsQuery(
+  baseOptions: Apollo.QueryHookOptions<SchoolsQuery, SchoolsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SchoolsQuery, SchoolsQueryVariables>(
+    SchoolsDocument,
+    options
+  );
+}
+export function useSchoolsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SchoolsQuery, SchoolsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SchoolsQuery, SchoolsQueryVariables>(
+    SchoolsDocument,
+    options
+  );
+}
+export type SchoolsQueryHookResult = ReturnType<typeof useSchoolsQuery>;
+export type SchoolsLazyQueryHookResult = ReturnType<typeof useSchoolsLazyQuery>;
+export type SchoolsQueryResult = Apollo.QueryResult<
+  SchoolsQuery,
+  SchoolsQueryVariables
+>;
+export const TeamsDocument = gql`
+  query Teams($search: String!) {
+    teams(search: $search) {
+      teams {
+        id
+        name
+      }
+    }
+  }
+`;
+
+/**
+ * __useTeamsQuery__
+ *
+ * To run a query within a React component, call `useTeamsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTeamsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTeamsQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useTeamsQuery(
+  baseOptions: Apollo.QueryHookOptions<TeamsQuery, TeamsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<TeamsQuery, TeamsQueryVariables>(
+    TeamsDocument,
+    options
+  );
+}
+export function useTeamsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<TeamsQuery, TeamsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<TeamsQuery, TeamsQueryVariables>(
+    TeamsDocument,
+    options
+  );
+}
+export type TeamsQueryHookResult = ReturnType<typeof useTeamsQuery>;
+export type TeamsLazyQueryHookResult = ReturnType<typeof useTeamsLazyQuery>;
+export type TeamsQueryResult = Apollo.QueryResult<
+  TeamsQuery,
+  TeamsQueryVariables
 >;

@@ -1,7 +1,15 @@
-import authBackgroundImage from 'assets/images';
+import { authBackgroundImage } from 'assets/images';
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { Anchor, Box, Button, Flex, Text, Validation } from 'shared';
+import {
+  Anchor,
+  Box,
+  Button,
+  ContentContainer,
+  Flex,
+  Text,
+  Validation,
+} from 'shared';
 import Input from 'shared/ui/Input';
 import { Field, Form } from 'react-final-form';
 import * as yup from 'yup';
@@ -16,10 +24,6 @@ import pick from 'lodash/pick';
 import { useHistory } from 'react-router-dom';
 import routes from 'Routes/constants';
 import withAuth from 'hocs/withAuth';
-
-const ContentContainer = styled(Flex)`
-  grid-area: content;
-`;
 
 const Modal = styled(Flex)`
   backdrop-filter: blur(5px);
@@ -95,7 +99,7 @@ const SignIn: FC = () => {
       alignItems="center"
       overflow="auto"
       p="16px"
-      backgroundImage={`url(${authBackgroundImage})`}
+      /* ts-ignore */ backgroundImage={`url(${authBackgroundImage})`}
       backgroundSize="cover"
       backgroundPosition="top center"
     >
@@ -138,7 +142,7 @@ const SignIn: FC = () => {
                       placeholder="Email"
                       onFocus={onFocus}
                       onBlur={onBlur}
-                      isActive={active}
+                      isActive={active ?? false}
                       icon="email"
                     />
                   </Validation>
@@ -155,7 +159,7 @@ const SignIn: FC = () => {
                       placeholder="Password"
                       onFocus={onFocus}
                       onBlur={onBlur}
-                      isActive={active}
+                      isActive={active ?? false}
                       type="password"
                       icon="password"
                     />

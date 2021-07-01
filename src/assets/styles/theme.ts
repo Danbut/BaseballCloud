@@ -6,6 +6,7 @@ export const theme = {
     dodgerBlue: '#48bbff',
     textColor: '#667784',
     astral: '#337ab7',
+    paleSky: '#667784',
   },
 };
 

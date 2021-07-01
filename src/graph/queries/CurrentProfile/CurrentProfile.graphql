@@ -1,4 +1,4 @@
-query Profile {
+query CurrentProfile {
   current_profile {
     id
     first_name
