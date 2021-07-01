@@ -10,3 +10,4 @@ export { default as useProfileNamesQuery } from './ProfileNames';
 export { default as useSchoolsQuery } from './Schools';
 export { default as useTeamsQuery } from './Teams';
 export { default as useProfileEventsQuery } from './ProfileEvents';
+export { default as useProfilesQuery } from './Profiles';

@@ -11,3 +11,4 @@ export { default as DatePicker } from './DatePicker';
 export { default as Select } from './Select';
 export { default as Search } from './Search';
 export { default as SearchSuggestDropDown } from './SearchSuggestDropDown';
+export { default as OutgoiningInput } from './OutgoiningInput';

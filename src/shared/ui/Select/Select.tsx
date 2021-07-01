@@ -38,7 +38,11 @@ const Select: VFC<SelectProps> = ({
         {validIcons[icon]}
       </SelectButton>
       {isActive ? (
-        <DropDownMenu>
+        <DropDownMenu
+          onMouseLeave={() => {
+            setIsActive(false);
+          }}
+        >
           {!withoutNone && (
             <Option
               p="8px 10px"
