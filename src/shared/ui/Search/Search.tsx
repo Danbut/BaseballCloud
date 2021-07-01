@@ -1,10 +1,10 @@
 import React, { VFC } from 'react';
 import styled from 'styled-components';
 
-const Search: VFC<{ value: string; onChange(value: string): void }> = ({
-  value,
-  onChange,
-}) => {
+const Search: VFC<{
+  value?: string;
+  onChange(value: string | undefined): void;
+}> = ({ value, onChange }) => {
   const onClick = () => onChange(value);
 
   return (
@@ -69,6 +69,7 @@ const SearchInput = styled.input`
   font-weight: 400;
   color: #788b99;
   border-bottom: 1px solid #48bbff;
+  outline: none;
 `;
 
 export default Search;

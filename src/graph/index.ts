@@ -11,6 +11,7 @@ export {
   useProfileNamesQuery,
   useSchoolsQuery,
   useTeamsQuery,
+  useProfilesQuery,
 } from './queries';
 
 export { default as useUpdateProfileMutation } from './mutation';

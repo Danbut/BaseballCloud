@@ -1651,6 +1651,52 @@ export type ProfileNamesQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export type ProfilesQueryVariables = Exact<{
+  input: FilterProfilesInput;
+}>;
+
+export type ProfilesQuery = { __typename?: 'Query' } & {
+  profiles?: Maybe<
+    { __typename?: 'FilterProfilesResult' } & Pick<
+      FilterProfilesResult,
+      'total_count'
+    > & {
+        profiles?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Profile' } & Pick<
+                Profile,
+                | 'id'
+                | 'first_name'
+                | 'last_name'
+                | 'position'
+                | 'position2'
+                | 'school_year'
+                | 'feet'
+                | 'inches'
+                | 'weight'
+                | 'age'
+                | 'favorite'
+              > & {
+                  events?: Maybe<
+                    Array<Maybe<{ __typename?: 'Event' } & Pick<Event, 'id'>>>
+                  >;
+                  school?: Maybe<
+                    { __typename?: 'School' } & Pick<School, 'id' | 'name'>
+                  >;
+                  teams?: Maybe<
+                    Array<
+                      Maybe<{ __typename?: 'Team' } & Pick<Team, 'id' | 'name'>>
+                    >
+                  >;
+                }
+            >
+          >
+        >;
+      }
+  >;
+};
+
 export type SchoolsQueryVariables = Exact<{
   search: Scalars['String'];
 }>;
@@ -2497,6 +2543,83 @@ export type ProfileNamesLazyQueryHookResult = ReturnType<
 export type ProfileNamesQueryResult = Apollo.QueryResult<
   ProfileNamesQuery,
   ProfileNamesQueryVariables
+>;
+export const ProfilesDocument = gql`
+  query Profiles($input: FilterProfilesInput!) {
+    profiles(input: $input) {
+      profiles {
+        id
+        first_name
+        last_name
+        position
+        position2
+        school_year
+        feet
+        inches
+        weight
+        age
+        events {
+          id
+        }
+        school {
+          id
+          name
+        }
+        teams {
+          id
+          name
+        }
+        favorite
+      }
+      total_count
+    }
+  }
+`;
+
+/**
+ * __useProfilesQuery__
+ *
+ * To run a query within a React component, call `useProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfilesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<ProfilesQuery, ProfilesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfilesQuery, ProfilesQueryVariables>(
+    ProfilesDocument,
+    options
+  );
+}
+export function useProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfilesQuery,
+    ProfilesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfilesQuery, ProfilesQueryVariables>(
+    ProfilesDocument,
+    options
+  );
+}
+export type ProfilesQueryHookResult = ReturnType<typeof useProfilesQuery>;
+export type ProfilesLazyQueryHookResult = ReturnType<
+  typeof useProfilesLazyQuery
+>;
+export type ProfilesQueryResult = Apollo.QueryResult<
+  ProfilesQuery,
+  ProfilesQueryVariables
 >;
 export const SchoolsDocument = gql`
   query Schools($search: String!) {
