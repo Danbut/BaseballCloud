@@ -1,7 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Profile, useProfilesQuery } from 'graph';
+import {
+  Profile,
+  useProfilesQuery,
+  useUpdateFavoriteProfileMutation,
+} from 'graph';
 import getFullName from 'helpers/getFullName';
 import React, { ReactNode, useEffect, useMemo, useState, VFC } from 'react';
 import { usePagination, useTable } from 'react-table';
@@ -12,6 +16,11 @@ import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 import { usePagination as usePaginationControl } from '@material-ui/lab/Pagination';
 
 import useDebounce from 'hooks/useDebounce';
+import toastr from 'toastr';
+import { ProfilesDocument } from 'graph/generated';
+import { makeVar } from '@apollo/client';
+
+const filterVar = makeVar({});
 
 const Table: VFC = () => {
   const [
@@ -215,6 +224,14 @@ const networkColumns = [
   {
     Header: 'Player Name',
     accessor: 'name' as const,
+    // eslint-disable-next-line
+    // @ts-ignore
+    Cell: ({ value, row: { original } }) => (
+      // eslint-disable-next-line
+      <ProfileLink href={`/profile/${original?.id as string}`}>
+        {value}
+      </ProfileLink>
+    ),
   },
   {
     Header: 'Session',
@@ -237,12 +254,74 @@ const networkColumns = [
     accessor: 'favorite' as const,
     // eslint-disable-next-line
     // @ts-ignore
-    Cell: ({ value }) =>
-      value ? (
-        <FontAwesomeIcon icon={faHeart} color="#48bbff" />
-      ) : (
-        <FontAwesomeIcon icon={farHeart} color="#48bbff" />
-      ),
+    Cell: ({ row: { original } }) => {
+      const [updateFavorite] = useUpdateFavoriteProfileMutation({
+        refetchQueries: [
+          {
+            query: ProfilesDocument,
+            variables: {
+              input: filterVar(),
+            },
+          },
+        ],
+      });
+      return (
+        <>
+          {/*   eslint-disable-next-line */}
+          {original.favorite ? (
+            <FontAwesomeIcon
+              icon={faHeart}
+              color="#48bbff"
+              onClick={async () => {
+                await updateFavorite({
+                  variables: {
+                    form: {
+                      // eslint-disable-next-line
+                      // @ts-ignore
+                      // eslint-disable-next-line
+                      profile_id: original.id,
+                      favorite: false,
+                    },
+                  },
+                });
+                toastr.options = {
+                  positionClass: 'toast-top-full-width',
+                  hideDuration: 300,
+                  timeOut: 60000,
+                };
+                toastr.clear();
+                setTimeout(() => toastr.success(`Set favorite`), 300);
+              }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={farHeart}
+              color="#48bbff"
+              onClick={async () => {
+                await updateFavorite({
+                  variables: {
+                    form: {
+                      // eslint-disable-next-line
+                      // @ts-ignore
+                      // eslint-disable-next-line
+                      profile_id: original.id,
+                      favorite: true,
+                    },
+                  },
+                });
+                toastr.options = {
+                  positionClass: 'toast-top-full-width',
+                  hideDuration: 300,
+                  timeOut: 60000,
+                };
+                toastr.clear();
+                setTimeout(() => toastr.success(`Unset favorite`), 300);
+              }}
+            />
+          )}
+        </>
+      );
+    },
   },
 ];
 
@@ -250,17 +329,19 @@ const favoriteSelect = ['All', 'Favorite'];
 
 const CountRecordsOnPage = ['10', '15', '20'];
 
+const ProfileLink = styled.a`
+  all: unset;
+`;
+
 const transformProfilesDataToNetworkTableData = (profiles: Profile[]) =>
   profiles.map((p) => ({
     name: getFullName(p.first_name as string, p.last_name as string),
     session: '-',
     school: p.school?.name as string,
-    teams: p.teams?.reduce<string>(
-      (acc, t) => `${acc},${t?.name as string}`,
-      ''
-    ),
+    teams: p.teams?.map((t) => t?.name).join(),
     age: p.age as number,
     favorite: p.favorite as boolean,
+    id: p.id,
   }));
 
 type NetworkFilter = {
@@ -442,6 +523,7 @@ const useNetworkTable = () => {
       filter.profiles_count,
       filter.offset
     );
+    filterVar(debouncedFilter);
     // eslint-disable-next-line
   }, [profiles?.profiles?.profiles]);
 

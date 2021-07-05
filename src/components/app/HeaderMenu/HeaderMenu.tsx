@@ -15,6 +15,10 @@ const HeaderMenu: VFC<{ profile: Profile }> = ({ profile }) => {
   const history = useHistory();
   return (
     <Container>
+      <Navigation>
+        <PageLink href="\leaderboard">Leaderboard</PageLink>
+        <PageLink href="\network">Network</PageLink>
+      </Navigation>
       <Avatar
         width="32px"
         height="32px"
@@ -59,6 +63,19 @@ const HeaderMenu: VFC<{ profile: Profile }> = ({ profile }) => {
     </Container>
   );
 };
+
+const Navigation = styled.nav`
+  display: flex;
+`;
+
+const PageLink = styled.a`
+  padding: 0 8px;
+  color: #788b99;
+  text-decoration: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
 
 const Container = styled.div`
   margin-left: 16px;

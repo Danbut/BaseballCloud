@@ -2,9 +2,10 @@ import EditProfile from 'components/profile/EditProfile';
 import ProfileInfo from 'components/profile/ProfileInfo';
 import Stats from 'components/profile/Stats';
 import SummaryEvents from 'components/profile/SummaryEvents';
-import { useCurrentProfileQuery } from 'graph';
+import { useCurrentProfileQuery, useProfileQuery } from 'graph';
 import withAuth from 'hocs/withAuth';
 import React, { useState, VFC } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { ContentContainer, Spinner } from 'shared';
 import styled from 'styled-components';
 
@@ -15,12 +16,30 @@ const Main = styled.main`
   width: calc(100vw - 220px);
 `;
 
-const Profile: VFC = () => {
+const Profile: VFC<RouteComponentProps<{ id: string }>> = ({
+  match: {
+    params: { id },
+  },
+}) => {
   /* eslint-disable */
-  const { loading, data, error } = useCurrentProfileQuery();
+  const {
+    loading: currentProfileLoading,
+    data: currentProfile,
+    error: currentProfileError,
+  } = useCurrentProfileQuery({
+    skip: Boolean(id),
+  });
+  const {
+    loading: profileLoadding,
+    data: profile,
+    error: profileError,
+  } = useProfileQuery({
+    variables: { id },
+    skip: !Boolean(id),
+  });
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
-  if (loading)
+  if (currentProfileLoading || profileLoadding)
     return (
       <ContentContainer
         background="white"
@@ -28,10 +47,10 @@ const Profile: VFC = () => {
         overflow={['visible', 'hidden']}
         alignItems="center"
       >
-        <Spinner loading={loading} />
+        <Spinner loading={currentProfileLoading || profileLoadding} />
       </ContentContainer>
     );
-  if (error)
+  if (currentProfileError || profileError)
     return (
       <ContentContainer
         background="white"
@@ -41,7 +60,10 @@ const Profile: VFC = () => {
         <p>...error</p>
       </ContentContainer>
     );
-  if (data && data.current_profile) {
+  if (
+    (currentProfile && currentProfile?.current_profile) ||
+    (profile && profile?.profile)
+  ) {
     return (
       <ContentContainer
         background="white"
@@ -50,7 +72,7 @@ const Profile: VFC = () => {
       >
         {isEditingProfile && (
           <EditProfile
-            id={data.current_profile.id}
+            id={currentProfile?.current_profile?.id || id}
             onCancel={() => {
               setIsEditingProfile(false);
             }}
@@ -58,7 +80,9 @@ const Profile: VFC = () => {
         )}
         {!isEditingProfile && (
           <ProfileInfo
-            profile={data.current_profile}
+            // eslint-disable-next-line
+            // @ts-ignore
+            profile={currentProfile?.current_profile || profile?.profile}
             onEditProfile={() => {
               setIsEditingProfile(true);
             }}
@@ -66,12 +90,18 @@ const Profile: VFC = () => {
         )}
         <Main>
           <SummaryEvents />
-          <Stats id={data.current_profile.id} profile={data.current_profile} />
+          <Stats
+            id={currentProfile?.current_profile?.id || id}
+            // eslint-disable-next-line
+            // @ts-ignore
+            profile={currentProfile?.current_profile || profile?.profile}
+          />
         </Main>
       </ContentContainer>
     );
   }
   return <></>;
 };
-
+// eslint-disable-next-line
+// @ts-ignore
 export default withAuth(Profile);

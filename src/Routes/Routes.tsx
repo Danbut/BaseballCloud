@@ -12,6 +12,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { theme } from 'assets/styles/theme';
 import {
   ForgotPassword,
+  Leaderboard,
   NotFound,
   Privacy,
   Profile,
@@ -85,11 +86,19 @@ const Routes: VFC = () => {
             <Route path={routes.forgotPassword}>
               <ForgotPassword />
             </Route>
-            <Route path={routes.profile}>
-              <Profile />
-            </Route>
+            <Route
+              exact
+              path={`${routes.profile}/:id?`}
+              render={(props) => (
+                /* eslint-disable-next-line */
+                <Profile {...props} key={props.location.key} />
+              )}
+            />
             <Route path={routes.network}>
               <Network />
+            </Route>
+            <Route path={routes.leaderboard}>
+              <Leaderboard />
             </Route>
             <Route exact path={routes.root}>
               {token ? (

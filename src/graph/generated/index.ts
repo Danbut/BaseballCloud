@@ -1209,6 +1209,19 @@ export type User = {
   id: Scalars['ID'];
 };
 
+export type UpdateFavoriteProfileMutationVariables = Exact<{
+  form: UpdateFavoriteProfileInput;
+}>;
+
+export type UpdateFavoriteProfileMutation = { __typename?: 'Mutation' } & {
+  update_favorite_profile?: Maybe<
+    { __typename?: 'UpdateFavoriteProfilePayload' } & Pick<
+      UpdateFavoriteProfilePayload,
+      'favorite'
+    >
+  >;
+};
+
 export type UpdateProfileMutationVariables = Exact<{
   form: UpdateProfileInput;
 }>;
@@ -1441,6 +1454,44 @@ export type LeaderboardBattingQuery = { __typename?: 'Query' } & {
               | 'launch_angle'
               | 'distance'
               | 'batter_datraks_id'
+              | 'age'
+              | 'favorite'
+            > & {
+                school?: Maybe<
+                  { __typename?: 'School' } & Pick<School, 'id' | 'name'>
+                >;
+                teams?: Maybe<
+                  Array<
+                    Maybe<{ __typename?: 'Team' } & Pick<Team, 'id' | 'name'>>
+                  >
+                >;
+              }
+          >
+        >
+      >;
+    }
+  >;
+};
+
+export type LeaderboardPitchingQueryVariables = Exact<{
+  input: FilterLeaderboardInput;
+}>;
+
+export type LeaderboardPitchingQuery = { __typename?: 'Query' } & {
+  leaderboard_pitching?: Maybe<
+    { __typename?: 'FilterLeaderboardPitchingResult' } & {
+      leaderboard_pitching?: Maybe<
+        Array<
+          Maybe<
+            { __typename?: 'FlightScopeDataRowType' } & Pick<
+              FlightScopeDataRowType,
+              | 'pitcher_name'
+              | 'pitch_type'
+              | 'velocity'
+              | 'spin_rate'
+              | 'vertical_break'
+              | 'horizontal_break'
+              | 'pitcher_datraks_id'
               | 'age'
               | 'favorite'
             > & {
@@ -1725,6 +1776,55 @@ export type TeamsQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export const UpdateFavoriteProfileDocument = gql`
+  mutation UpdateFavoriteProfile($form: UpdateFavoriteProfileInput!) {
+    update_favorite_profile(input: $form) {
+      favorite
+    }
+  }
+`;
+export type UpdateFavoriteProfileMutationFn = Apollo.MutationFunction<
+  UpdateFavoriteProfileMutation,
+  UpdateFavoriteProfileMutationVariables
+>;
+
+/**
+ * __useUpdateFavoriteProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateFavoriteProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFavoriteProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFavoriteProfileMutation, { data, loading, error }] = useUpdateFavoriteProfileMutation({
+ *   variables: {
+ *      form: // value for 'form'
+ *   },
+ * });
+ */
+export function useUpdateFavoriteProfileMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateFavoriteProfileMutation,
+    UpdateFavoriteProfileMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateFavoriteProfileMutation,
+    UpdateFavoriteProfileMutationVariables
+  >(UpdateFavoriteProfileDocument, options);
+}
+export type UpdateFavoriteProfileMutationHookResult = ReturnType<
+  typeof useUpdateFavoriteProfileMutation
+>;
+export type UpdateFavoriteProfileMutationResult = Apollo.MutationResult<UpdateFavoriteProfileMutation>;
+export type UpdateFavoriteProfileMutationOptions = Apollo.BaseMutationOptions<
+  UpdateFavoriteProfileMutation,
+  UpdateFavoriteProfileMutationVariables
+>;
 export const UpdateProfileDocument = gql`
   mutation UpdateProfile($form: UpdateProfileInput!) {
     update_profile(input: $form) {
@@ -2229,6 +2329,82 @@ export type LeaderboardBattingLazyQueryHookResult = ReturnType<
 export type LeaderboardBattingQueryResult = Apollo.QueryResult<
   LeaderboardBattingQuery,
   LeaderboardBattingQueryVariables
+>;
+export const LeaderboardPitchingDocument = gql`
+  query LeaderboardPitching($input: FilterLeaderboardInput!) {
+    leaderboard_pitching(input: $input) {
+      leaderboard_pitching {
+        pitcher_name
+        pitch_type
+        velocity
+        spin_rate
+        vertical_break
+        horizontal_break
+        pitcher_datraks_id
+        age
+        school {
+          id
+          name
+        }
+        teams {
+          id
+          name
+        }
+        favorite
+      }
+    }
+  }
+`;
+
+/**
+ * __useLeaderboardPitchingQuery__
+ *
+ * To run a query within a React component, call `useLeaderboardPitchingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLeaderboardPitchingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLeaderboardPitchingQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useLeaderboardPitchingQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    LeaderboardPitchingQuery,
+    LeaderboardPitchingQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    LeaderboardPitchingQuery,
+    LeaderboardPitchingQueryVariables
+  >(LeaderboardPitchingDocument, options);
+}
+export function useLeaderboardPitchingLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    LeaderboardPitchingQuery,
+    LeaderboardPitchingQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    LeaderboardPitchingQuery,
+    LeaderboardPitchingQueryVariables
+  >(LeaderboardPitchingDocument, options);
+}
+export type LeaderboardPitchingQueryHookResult = ReturnType<
+  typeof useLeaderboardPitchingQuery
+>;
+export type LeaderboardPitchingLazyQueryHookResult = ReturnType<
+  typeof useLeaderboardPitchingLazyQuery
+>;
+export type LeaderboardPitchingQueryResult = Apollo.QueryResult<
+  LeaderboardPitchingQuery,
+  LeaderboardPitchingQueryVariables
 >;
 export const NotificationsDocument = gql`
   query Notifications($input: FilterNotificationsInput!) {

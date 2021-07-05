@@ -1,3 +1,4 @@
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, VFC } from 'react';
 import Box from 'shared/primitives/Box';
@@ -23,8 +24,6 @@ const Select: VFC<SelectProps> = ({
 }) => {
   const [isActive, setIsActive] = useState(false);
 
-  const icon = isActive ? 'up' : 'down';
-
   const maskText = mask ? `${mask} ${value as string}` : null;
 
   const placeholderText = value
@@ -35,7 +34,7 @@ const Select: VFC<SelectProps> = ({
     <SelectContainer>
       <SelectButton onClick={() => setIsActive(!isActive)}>
         {placeholder ? placeholderText : maskText}&nbsp;
-        {validIcons[icon]}
+        {icons.get(isActive)}
       </SelectButton>
       {isActive ? (
         <DropDownMenu
@@ -101,10 +100,10 @@ const DropDownMenu = styled.div`
   background: white;
 `;
 
-const validIcons = {
-  up: <FontAwesomeIcon icon="chevron-up" color="#48bbff" />,
-  down: <FontAwesomeIcon icon="chevron-down" color="#48bbff" />,
-} as const;
+const icons = new Map([
+  [true, <FontAwesomeIcon icon={faChevronUp} color="#48bbff" />],
+  [false, <FontAwesomeIcon icon={faChevronDown} color="#48bbff" />],
+]);
 
 const SelectButton = styled.button`
   background-color: transparent;

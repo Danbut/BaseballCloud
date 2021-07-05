@@ -4,18 +4,18 @@ import React, { useState, VFC } from 'react';
 import LibDatePicker from 'react-datepicker';
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 const DatePicker: VFC<{ value: Date; onChange(value: Date): void }> = ({
   value,
   onChange,
 }) => {
   const [isActive, setIsActive] = useState(false);
-  const icon = isActive ? 'up' : 'down';
   return (
     <SelectContainer>
       <SelectButton onClick={() => setIsActive(!isActive)}>
         {`Date (${moment(value).format('DD/MM/YYYY')})`}&nbsp;
-        {validIcons[icon]}
+        {icons.get(isActive)}
       </SelectButton>
       {isActive && (
         <DatePickerContainer>
@@ -43,10 +43,10 @@ const SelectContainer = styled.div`
   position: relative;
 `;
 
-const validIcons = {
-  up: <FontAwesomeIcon icon="chevron-up" color="#48bbff" />,
-  down: <FontAwesomeIcon icon="chevron-down" color="#48bbff" />,
-} as const;
+const icons = new Map([
+  [true, <FontAwesomeIcon icon={faChevronUp} color="#48bbff" />],
+  [false, <FontAwesomeIcon icon={faChevronDown} color="#48bbff" />],
+]);
 
 const SelectButton = styled.button`
   background-color: transparent;

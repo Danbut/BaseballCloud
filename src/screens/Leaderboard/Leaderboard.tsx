@@ -1,9 +1,9 @@
 import React from 'react';
-import Table from 'components/network/NetworkTable';
+import Table from 'components/leaderboard/LeaderboardTable';
 import { ContentContainer } from 'shared';
 import withAuth from 'hocs/withAuth';
 
-const Network = () => (
+const Leaderboard = () => (
   <ContentContainer
     background="white"
     justifyContent="space-between"
@@ -13,4 +13,4 @@ const Network = () => (
   </ContentContainer>
 );
 
-export default withAuth(Network);
+export default withAuth(Leaderboard);
