@@ -14,7 +14,10 @@ export {
   useProfilesQuery,
 } from './queries';
 
-export { default as useUpdateProfileMutation } from './mutation';
+export {
+  useUpdateProfileMutation,
+  useUpdateFavoriteProfileMutation,
+} from './mutation';
 
 export { default as apolloClient } from './apollo';
 

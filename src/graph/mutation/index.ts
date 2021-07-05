@@ -1,3 +1,2 @@
-import useUpdateProfileMutation from './UpdateProfile';
-
-export default useUpdateProfileMutation;
+export { default as useUpdateProfileMutation } from './UpdateProfile';
+export { default as useUpdateFavoriteProfileMutation } from './UpdateFavoriteProfile';

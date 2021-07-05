@@ -1209,6 +1209,19 @@ export type User = {
   id: Scalars['ID'];
 };
 
+export type UpdateFavoriteProfileMutationVariables = Exact<{
+  form: UpdateFavoriteProfileInput;
+}>;
+
+export type UpdateFavoriteProfileMutation = { __typename?: 'Mutation' } & {
+  update_favorite_profile?: Maybe<
+    { __typename?: 'UpdateFavoriteProfilePayload' } & Pick<
+      UpdateFavoriteProfilePayload,
+      'favorite'
+    >
+  >;
+};
+
 export type UpdateProfileMutationVariables = Exact<{
   form: UpdateProfileInput;
 }>;
@@ -1725,6 +1738,55 @@ export type TeamsQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export const UpdateFavoriteProfileDocument = gql`
+  mutation UpdateFavoriteProfile($form: UpdateFavoriteProfileInput!) {
+    update_favorite_profile(input: $form) {
+      favorite
+    }
+  }
+`;
+export type UpdateFavoriteProfileMutationFn = Apollo.MutationFunction<
+  UpdateFavoriteProfileMutation,
+  UpdateFavoriteProfileMutationVariables
+>;
+
+/**
+ * __useUpdateFavoriteProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateFavoriteProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFavoriteProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFavoriteProfileMutation, { data, loading, error }] = useUpdateFavoriteProfileMutation({
+ *   variables: {
+ *      form: // value for 'form'
+ *   },
+ * });
+ */
+export function useUpdateFavoriteProfileMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateFavoriteProfileMutation,
+    UpdateFavoriteProfileMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateFavoriteProfileMutation,
+    UpdateFavoriteProfileMutationVariables
+  >(UpdateFavoriteProfileDocument, options);
+}
+export type UpdateFavoriteProfileMutationHookResult = ReturnType<
+  typeof useUpdateFavoriteProfileMutation
+>;
+export type UpdateFavoriteProfileMutationResult = Apollo.MutationResult<UpdateFavoriteProfileMutation>;
+export type UpdateFavoriteProfileMutationOptions = Apollo.BaseMutationOptions<
+  UpdateFavoriteProfileMutation,
+  UpdateFavoriteProfileMutationVariables
+>;
 export const UpdateProfileDocument = gql`
   mutation UpdateProfile($form: UpdateProfileInput!) {
     update_profile(input: $form) {
