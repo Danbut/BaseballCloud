@@ -12,6 +12,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { theme } from 'assets/styles/theme';
 import {
   ForgotPassword,
+  Leaderboard,
   NotFound,
   Privacy,
   Profile,
@@ -90,6 +91,9 @@ const Routes: VFC = () => {
             </Route>
             <Route path={routes.network}>
               <Network />
+            </Route>
+            <Route path={routes.leaderboard}>
+              <Leaderboard />
             </Route>
             <Route exact path={routes.root}>
               {token ? (
