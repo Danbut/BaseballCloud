@@ -1,51 +1,48 @@
+// eslint-disable-next-line
+// @ts-nocheck
 /* eslint-disable react/jsx-props-no-spreading */
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Profile, useProfilesQuery } from 'graph';
-import getFullName from 'helpers/getFullName';
-import React, { ReactNode, useEffect, useMemo, useState, VFC } from 'react';
+import {
+  FlightScopeDataRowType,
+  useLeaderboardBattingQuery,
+  useLeaderboardPitchingQuery,
+} from 'graph';
+import React, { useMemo, useState, VFC } from 'react';
 import { usePagination, useTable } from 'react-table';
-import { Flex, OutgoiningInput, Search, Select, Spinner, Text } from 'shared';
+import { Flex, OutgoiningInput, Select, Spinner, Text } from 'shared';
 import styled from 'styled-components';
 import { positions } from 'values';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
-import { usePagination as usePaginationControl } from '@material-ui/lab/Pagination';
 
 import useDebounce from 'hooks/useDebounce';
 
 const Table: VFC = () => {
   const [
+    filter,
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-    pageCount,
-    canPreviousPage,
-    canNextPage,
-    goToPage,
-    setPageSize,
     setSchool,
     setTeam,
     setPosition,
     setAge,
     setFavorite,
-    setPlayer,
+    setType,
+    setDate,
+    // eslint-disable-next-line
     loading,
-    totalCount,
   ] = useNetworkTable();
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { items } = usePaginationControl({
-    count: pageCount,
-  });
 
   return (
     <Datagrid>
       <div>
         <DatagridHeaderRow>
-          <DatagridTitle>Network</DatagridTitle>
+          <DatagridTitle>Leaderboard</DatagridTitle>
           <Filters>
+            <Select items={dateSelect} placeholder="Date" onChange={setDate} />
             <OutgoiningInput
               placeholder="School"
               name="school"
@@ -73,19 +70,44 @@ const Table: VFC = () => {
               onChange={setFavorite}
               withoutNone
             />
-            <Select
-              items={CountRecordsOnPage}
-              placeholder="Show"
-              onChange={setPageSize}
-              withoutNone
-            />
           </Filters>
         </DatagridHeaderRow>
         <DatagridHeaderRow>
-          <AvailablePlayer>
-            Available Players ({totalCount ?? '-'})
-          </AvailablePlayer>
-          <Search onChange={setPlayer} />
+          <div>
+            <TypeButton
+              isActive={
+                filter.type === 'exit_velocity' ||
+                filter.type === 'carry_distance'
+              }
+              onClick={() => setType(battingTypes[0])}
+            >
+              Batting
+            </TypeButton>
+            <TypeButton
+              isActive={
+                filter.type === 'pitch_velocity' || filter.type === 'spin_rate'
+              }
+              onClick={() => setType(pitchingTypes[0])}
+            >
+              Pitching
+            </TypeButton>
+          </div>
+          <Select
+            items={
+              filter.type === 'exit_velocity' ||
+              filter.type === 'carry_distance'
+                ? battingTypes
+                : pitchingTypes
+            }
+            onChange={setType}
+            value={
+              filter.type === 'exit_velocity' ||
+              filter.type === 'carry_distance'
+                ? battingTypes[0]
+                : pitchingTypes[0]
+            }
+            placeholder="Type"
+          />
         </DatagridHeaderRow>
       </div>
       {loading && (
@@ -95,6 +117,7 @@ const Table: VFC = () => {
           alignItems="center"
           justifyContent="center"
         >
+          {/* eslint-disable-next-line */}
           <Spinner loading={loading} />
         </Flex>
       )}
@@ -137,113 +160,66 @@ const Table: VFC = () => {
               })}
             </tbody>
           </DatagridTable>
-
-          <Pagination>
-            {items.map(({ page, type, selected, ...item }, index) => {
-              let children: ReactNode | null = null;
-
-              if (type === 'start-ellipsis' || type === 'end-ellipsis') {
-                children = (
-                  <>
-                    {type === 'start-ellipsis' ? (
-                      <PaginationButton
-                        {...item}
-                        onClick={() => goToPage(index - 1)}
-                      >
-                        ...
-                      </PaginationButton>
-                    ) : (
-                      <PaginationButton
-                        {...item}
-                        onClick={() => goToPage(index + 1)}
-                      >
-                        ...
-                      </PaginationButton>
-                    )}
-                  </>
-                );
-              } else if (type === 'page') {
-                children = (
-                  <PaginationButton
-                    isActive={selected}
-                    onClick={(e) => {
-                      goToPage(index);
-                      item.onClick(e);
-                    }}
-                  >
-                    {page}
-                  </PaginationButton>
-                );
-              } else {
-                children = (
-                  <>
-                    {type === 'previous' ? (
-                      <PaginationButton
-                        onClick={(e) => {
-                          goToPage(0);
-                          item.onClick(e);
-                        }}
-                        isDisabled={!canPreviousPage}
-                      >
-                        «
-                      </PaginationButton>
-                    ) : (
-                      <PaginationButton
-                        onClick={(e) => {
-                          goToPage(pageCount - 1);
-                          item.onClick(e);
-                        }}
-                        isDisabled={!canNextPage}
-                      >
-                        »
-                      </PaginationButton>
-                    )}
-                  </>
-                );
-              }
-              // eslint-disable-next-line react/no-array-index-key
-              return <li key={`key:${index}`}>{children}</li>;
-            })}
-          </Pagination>
         </>
       )}
     </Datagrid>
   );
 };
 
+const transformLeaderboardsDataToNetworkTableData = (
+  leaderboards: FlightScopeDataRowType[]
+) =>
+  leaderboards.map((l) => ({
+    age: l?.age,
+    batter_name: l?.batter_name,
+    distance: l?.distance,
+    teams: l?.teams?.map((t) => t.name).join(),
+    school: l?.school?.name,
+    launch_angle: l?.launch_angle ?? '-',
+    favorite: l?.favorite as boolean,
+    pitch_type: l?.pitch_type,
+    pitcher_name: l?.pitcher_name,
+    spin_rate: l?.spin_rate,
+    velocity: l?.velocity,
+    exit_velocity: l?.exit_velocity,
+  }));
+
 const battingColumns = [
   {
     Header: 'Rank',
-    accessor: 'name' as const,
+    accessor: '' as const,
+    Cell: (row: { row: { id: string } }) => (
+      <div>{parseInt(row.row.id, 10) + 1}</div>
+    ),
   },
   {
     Header: 'Batter Name',
-    accessor: 'session' as const,
+    accessor: 'batter_name' as const,
   },
   {
     Header: 'Age',
-    accessor: 'school' as const,
+    accessor: 'age' as const,
   },
   {
     Header: 'School',
-    accessor: 'teams' as const,
+    accessor: 'school' as const,
   },
   {
     Header: 'Teams',
-    accessor: 'age' as const,
+    accessor: 'teams' as const,
   },
   {
     Header: 'Exit Velocity',
-    accessor: 'age' as const,
+    accessor: 'exit_velocity' as const,
   },
 
   {
     Header: 'Launch Angle',
-    accessor: 'age' as const,
+    accessor: 'launch_angle' as const,
   },
   {
     Header: 'Distance',
-    accessor: 'age' as const,
+    accessor: 'distance' as const,
   },
   {
     Header: 'Favorite',
@@ -262,36 +238,39 @@ const battingColumns = [
 const pitchingColumns = [
   {
     Header: 'Rank',
-    accessor: 'name' as const,
+    accessor: '' as const,
+    Cell: (row: { row: { id: string } }) => (
+      <div>{parseInt(row.row.id, 10) + 1}</div>
+    ),
   },
   {
     Header: 'Pitcher Name',
-    accessor: 'session' as const,
+    accessor: 'pitcher_name' as const,
   },
   {
     Header: 'Age',
-    accessor: 'school' as const,
+    accessor: 'age' as const,
   },
   {
     Header: 'School',
-    accessor: 'teams' as const,
+    accessor: 'school' as const,
   },
   {
     Header: 'Teams',
-    accessor: 'age' as const,
+    accessor: 'teams' as const,
   },
   {
     Header: 'Pitch Type',
-    accessor: 'age' as const,
+    accessor: 'pitch_type' as const,
   },
 
   {
     Header: 'Velocity',
-    accessor: 'age' as const,
+    accessor: 'velocity' as const,
   },
   {
     Header: 'Spin Rate',
-    accessor: 'age' as const,
+    accessor: 'spin_rate' as const,
   },
   {
     Header: 'Favorite',
@@ -307,47 +286,52 @@ const pitchingColumns = [
   },
 ] as const;
 
-const favoriteSelect = ['All', 'Favorite'] as const;
+const favoriteSelect = ['All', 'Favorite'];
 
-const dateSelect = ['All', 'Last Week', 'Last Month'] as const;
+const dateSelect = ['Last Week', 'Last Month'];
 
-const transformProfilesDataToNetworkTableData = (profiles: Profile[]) =>
-  profiles.map((p) => ({
-    name: getFullName(p.first_name as string, p.last_name as string),
-    session: '-',
-    school: p.school?.name as string,
-    teams: p.teams?.reduce<string>(
-      (acc, t) => `${acc},${t?.name as string}`,
-      ''
-    ),
-    age: p.age as number,
-    favorite: p.favorite as boolean,
-  }));
+const pitchingTypes = ['Pitch Velocity', 'Spin Rate'];
+const battingTypes = ['Exit Velocity', 'Carry Distance'];
+
+const TypeButton = styled.button<{ isActive: boolean }>`
+  all: unset;
+  font-size: 14px;
+  font-weight: 700;
+  color: #667784;
+  padding: 8px;
+  margin: 8px;
+  border: 2px solid #788b99;
+  border-radius: 40px;
+  list-style: none;
+  display: inline;
+  :hover {
+    background-color: #cbcccd;
+  }
+  ${({ isActive }) =>
+    isActive ? `background-color: #667784; color: white;` : ''}
+  position: relative;
+  overflow: visible;
+`;
 
 type NetworkFilter = {
+  date?: string;
   school?: string;
   team?: string;
   position?: string;
   age?: number;
   favorite?: number;
-  // eslint-disable-next-line
-  profiles_count: number;
-  offset: number;
+  type: string;
 };
 
 const useNetworkFilter = (initState: NetworkFilter) => {
   const [filter, setFilter] = useState<NetworkFilter>(initState);
 
-  const setOffset = (offset: number) => {
-    setFilter({ ...filter, ...{ offset } });
-  };
-
   const setSchool = (school: string) => {
-    setFilter({ ...filter, ...{ school, offset: 0 } });
+    setFilter({ ...filter, ...{ school } });
   };
 
   const setTeam = (team: string) => {
-    setFilter({ ...filter, ...{ team, offset: 0 } });
+    setFilter({ ...filter, ...{ team } });
   };
 
   const setPosition = (value: string) => {
@@ -355,130 +339,113 @@ const useNetworkFilter = (initState: NetworkFilter) => {
       ...filter,
       ...{
         position: positions.find(({ name }) => name === value)?.slug,
-        offset: 0,
       },
     });
   };
 
   const setAge = (value: string) => {
-    setFilter({ ...filter, ...{ age: parseInt(value, 10), offset: 0 } });
+    setFilter({ ...filter, ...{ age: parseInt(value, 10) } });
   };
 
   const setFavorite = (value: string) => {
     setFilter({
       ...filter,
-      ...{ favorite: value === 'Favorite' ? 1 : undefined, offset: 0 },
+      ...{ favorite: value === 'Favorite' ? 1 : undefined },
     });
   };
 
-  const setPageSize = (value: string) => {
+  const setType = (type: string) => {
+    setFilter({ ...filter, ...{ type: type.replace(' ', '_').toLowerCase() } });
+  };
+
+  const setDate = (date: string) => {
     setFilter({
       ...filter,
-      ...{ profiles_count: parseInt(value, 10), offset: 0 },
+      ...{
+        date: date ? date.replace(' ', '_').toLowerCase() : null,
+      },
     });
-  };
-
-  const setPlayer = (value: string) => {
-    setFilter({ ...filter, ...{ player_name: value, offset: 0 } });
   };
 
   return [
     filter,
-    setOffset,
-    setPageSize,
+    setType,
     setSchool,
     setTeam,
     setPosition,
     setAge,
     setFavorite,
-    setPlayer,
-  ] as const;
-};
-
-const useNetworkPagination = () => {
-  const [pageCount, _setPageCount] = useState(0);
-  const [canPreviousPage, _setCanPreviousPage] = useState(false);
-  const [canNextPage, _setCanNextPage] = useState(false);
-
-  const setPageCount = (totalCount: number, perPage: number) => {
-    _setPageCount(Math.ceil(totalCount / perPage));
-  };
-
-  const setCanPreviousPage = (offset: number) => {
-    _setCanPreviousPage(Boolean(offset));
-  };
-
-  const setCanNextPage = (
-    totalCount: number,
-    perPage: number,
-    offset: number
-  ) => {
-    _setCanNextPage(!(totalCount - offset < perPage));
-  };
-
-  const goToPage = (
-    perPage: number,
-    index: number,
-    setOffset: (offset: number) => void
-  ) => {
-    setOffset(perPage * index);
-  };
-
-  return [
-    pageCount,
-    canPreviousPage,
-    canNextPage,
-    setPageCount,
-    setCanPreviousPage,
-    setCanNextPage,
-    goToPage,
+    setDate,
   ] as const;
 };
 
 const useNetworkTable = () => {
   const [
     filter,
-    setOffset,
-    setPageSize,
+    setType,
     setSchool,
     setTeam,
     setPosition,
     setAge,
     setFavorite,
-    setPlayer,
-  ] = useNetworkFilter({
-    profiles_count: 10,
-    offset: 0,
-  });
+    setDate,
+  ] = useNetworkFilter({ type: 'exit_velocity' });
 
   const debouncedFilter = useDebounce(filter, 500);
 
-  const { data: profiles, loading } = useProfilesQuery({
+  const {
+    data: leaderboardsBatting,
+    loadingBatting,
+  } = useLeaderboardBattingQuery({
     variables: {
       input: debouncedFilter,
     },
+    skip:
+      debouncedFilter.type === 'pitch_velocity' ||
+      debouncedFilter.type === 'spin_rate',
   });
 
-  const [
-    pageCount,
-    canPreviousPage,
-    canNextPage,
-    setPageCountDefault,
-    setCanPreviousPage,
-    setCanNextPage,
-    goToPageDefault,
-  ] = useNetworkPagination();
+  const {
+    data: leaderboardsPitching,
+    loadingPitching,
+  } = useLeaderboardPitchingQuery({
+    variables: {
+      input: debouncedFilter,
+    },
+    skip:
+      debouncedFilter.type === 'exit_velocity' ||
+      debouncedFilter.type === 'carry_distance',
+  });
 
-  const columns = useMemo<typeof battingColumns>(() => battingColumns, []);
+  const columns = useMemo<
+    typeof battingColumns | typeof pitchingColumns
+  >(() => {
+    if (
+      debouncedFilter.type === 'exit_velocity' ||
+      debouncedFilter.type === 'carry_distance'
+    ) {
+      return battingColumns;
+      // eslint-disable-next-line
+    } else {
+      return pitchingColumns;
+    }
+  }, [debouncedFilter.type]);
 
   // eslint-disable-next-line
   const data = useMemo(() => {
-    return transformProfilesDataToNetworkTableData(
+    return (
       // eslint-disable-next-line
       //@ts-ignore
-      profiles?.profiles?.profiles ?? []
-    ); // eslint-disable-next-line
-  }, [profiles?.profiles?.profiles]);
+      transformLeaderboardsDataToNetworkTableData(
+        // eslint-disable-next-line
+        // @ts-ignore
+        (leaderboardsBatting?.leaderboard_batting?.leaderboard_batting ||
+          // eslint-disable-next-line
+          leaderboardsPitching?.leaderboard_pitching?.leaderboard_pitching) ??
+          []
+      )
+    );
+  }, [leaderboardsBatting.leaderboard_batting.leaderboard_batting, leaderboardsPitching.leaderboard_pitching.leaderboard_pitching]);
 
   const {
     getTableProps,
@@ -486,89 +453,25 @@ const useNetworkTable = () => {
     headerGroups,
     rows,
     prepareRow,
-    setPageSize: setPageSizeUI,
-    // eslint-disable-next-line
-    // @ts-ignor
   } = useTable({ columns, data }, usePagination);
 
-  useEffect(() => {
-    setPageSizeUI(filter.profiles_count);
-    setPageCountDefault(
-      profiles?.profiles?.total_count ?? 0,
-      filter.profiles_count
-    );
-    setCanPreviousPage(filter.offset);
-    setCanNextPage(
-      profiles?.profiles?.total_count ?? 0,
-      filter.profiles_count,
-      filter.offset
-    );
-    // eslint-disable-next-line
-  }, [profiles?.profiles?.profiles]);
-
-  const goToPage = (index: number) => {
-    goToPageDefault(filter.profiles_count, index, setOffset);
-  };
-
   return [
+    debouncedFilter,
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-    pageCount,
-    canPreviousPage,
-    canNextPage,
-    goToPage,
-    setPageSize,
     setSchool,
     setTeam,
     setPosition,
     setAge,
     setFavorite,
-    setPlayer,
-    loading,
-    profiles?.profiles?.total_count,
+    setType,
+    setDate,
+    loadingBatting || loadingPitching,
   ] as const;
 };
-
-const Pagination = styled.ul`
-  border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: 16px 0;
-  position: sticky;
-  bottom: 0;
-  align-self: flex-end;
-  padding-left: 0;
-  border: 0;
-  list-style-type: none;
-`;
-
-const PaginationButton = styled.button<{
-  isActive?: boolean;
-  isDisabled?: boolean;
-}>`
-  all: unset;
-  position: relative;
-  float: left;
-  padding: 6px 12px;
-  color: #414f5a;
-  border: none;
-  text-decoration: none;
-  border-radius: 4px;
-  margin: 0 2px;
-  background-color: #f7f8f9;
-  margin-right: 0;
-  ${({ isActive }) =>
-    isActive
-      ? 'background-color: #48bbff; color: #fff; pointer-events: none;'
-      : ''}
-  ${({ isDisabled }) =>
-    isDisabled ? 'background-color: transparent; pointer-events: none;' : ''}
-`;
 
 const Datagrid = styled.div`
   table {
@@ -609,13 +512,6 @@ const DatagridTableRow = styled.tr`
   background-color: #f7f8f9;
   line-height: 44px;
   margin-bottom: 4px;
-`;
-
-const AvailablePlayer = styled.div`
-  font-size: 18px;
-  color: #414f5a;
-  font-weight: 400;
-  text-align: left;
 `;
 
 const Filters = styled.div`

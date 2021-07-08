@@ -255,10 +255,7 @@ const transformProfilesDataToNetworkTableData = (profiles: Profile[]) =>
     name: getFullName(p.first_name as string, p.last_name as string),
     session: '-',
     school: p.school?.name as string,
-    teams: p.teams?.reduce<string>(
-      (acc, t) => `${acc},${t?.name as string}`,
-      ''
-    ),
+    teams: p.teams?.map((t) => t?.name).join(),
     age: p.age as number,
     favorite: p.favorite as boolean,
   }));
