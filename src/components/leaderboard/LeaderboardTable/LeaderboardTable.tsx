@@ -7,6 +7,7 @@ import {
   FlightScopeDataRowType,
   useLeaderboardBattingQuery,
   useLeaderboardPitchingQuery,
+  useUpdateFavoriteProfileMutation,
 } from 'graph';
 import React, { useMemo, useState, VFC } from 'react';
 import { usePagination, useTable } from 'react-table';
@@ -16,6 +17,13 @@ import { positions } from 'values';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 
 import useDebounce from 'hooks/useDebounce';
+import { makeVar } from '@apollo/client';
+import {
+  LeaderboardBattingDocument,
+  LeaderboardPitchingDocument,
+} from 'graph/generated';
+
+const filterVar = makeVar({});
 
 const Table: VFC = () => {
   const [
@@ -182,6 +190,7 @@ const transformLeaderboardsDataToNetworkTableData = (
     spin_rate: l?.spin_rate,
     velocity: l?.velocity,
     exit_velocity: l?.exit_velocity,
+    id: l.pitcher_datraks_id || l.batter_datraks_id,
   }));
 
 const battingColumns = [
@@ -225,13 +234,79 @@ const battingColumns = [
     Header: 'Favorite',
     accessor: 'favorite' as const,
     // eslint-disable-next-line
-    // @ts-ignore
-    Cell: ({ value }) =>
-      value ? (
-        <FontAwesomeIcon icon={faHeart} color="#48bbff" />
-      ) : (
-        <FontAwesomeIcon icon={farHeart} color="#48bbff" />
-      ),
+    Cell: ({ row: { original } }) => {
+      const filter = filterVar();
+      const [updateFavorite] = useUpdateFavoriteProfileMutation({
+        refetchQueries: [
+          {
+            query:
+              filter.type === 'exit_velocity' ||
+              filter.type === 'carry_distance'
+                ? LeaderboardBattingDocument
+                : LeaderboardPitchingDocument,
+            variables: {
+              input: filter,
+            },
+          },
+        ],
+      });
+      return (
+        <>
+          {/*   eslint-disable-next-line */}
+          {original.favorite ? (
+            <FontAwesomeIcon
+              icon={faHeart}
+              color="#48bbff"
+              onClick={async () => {
+                await updateFavorite({
+                  variables: {
+                    form: {
+                      // eslint-disable-next-line
+                      // @ts-ignore
+                      // eslint-disable-next-line
+                      profile_id: original.id,
+                      favorite: false,
+                    },
+                  },
+                });
+                toastr.options = {
+                  positionClass: 'toast-top-full-width',
+                  hideDuration: 300,
+                  timeOut: 60000,
+                };
+                toastr.clear();
+                setTimeout(() => toastr.success(`Set favorite`), 300);
+              }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={farHeart}
+              color="#48bbff"
+              onClick={async () => {
+                await updateFavorite({
+                  variables: {
+                    form: {
+                      // eslint-disable-next-line
+                      // @ts-ignore
+                      // eslint-disable-next-line
+                      profile_id: original.id,
+                      favorite: true,
+                    },
+                  },
+                });
+                toastr.options = {
+                  positionClass: 'toast-top-full-width',
+                  hideDuration: 300,
+                  timeOut: 60000,
+                };
+                toastr.clear();
+                setTimeout(() => toastr.success(`Unset favorite`), 300);
+              }}
+            />
+          )}
+        </>
+      );
+    },
   },
 ] as const;
 
@@ -277,12 +352,79 @@ const pitchingColumns = [
     accessor: 'favorite' as const,
     // eslint-disable-next-line
     // @ts-ignore
-    Cell: ({ value }) =>
-      value ? (
-        <FontAwesomeIcon icon={faHeart} color="#48bbff" />
-      ) : (
-        <FontAwesomeIcon icon={farHeart} color="#48bbff" />
-      ),
+    Cell: ({ row: { original } }) => {
+      const filter = filterVar();
+      const [updateFavorite] = useUpdateFavoriteProfileMutation({
+        refetchQueries: [
+          {
+            query:
+              filter.type === 'exit_velocity' ||
+              filter.type === 'carry_distance'
+                ? LeaderboardBattingDocument
+                : LeaderboardPitchingDocument,
+            variables: {
+              input: filter,
+            },
+          },
+        ],
+      });
+      return (
+        <>
+          {/*   eslint-disable-next-line */}
+          {original.favorite ? (
+            <FontAwesomeIcon
+              icon={faHeart}
+              color="#48bbff"
+              onClick={async () => {
+                await updateFavorite({
+                  variables: {
+                    form: {
+                      // eslint-disable-next-line
+                      // @ts-ignore
+                      // eslint-disable-next-line
+                      profile_id: original.id,
+                      favorite: false,
+                    },
+                  },
+                });
+                toastr.options = {
+                  positionClass: 'toast-top-full-width',
+                  hideDuration: 300,
+                  timeOut: 60000,
+                };
+                toastr.clear();
+                setTimeout(() => toastr.success(`Set favorite`), 300);
+              }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={farHeart}
+              color="#48bbff"
+              onClick={async () => {
+                await updateFavorite({
+                  variables: {
+                    form: {
+                      // eslint-disable-next-line
+                      // @ts-ignore
+                      // eslint-disable-next-line
+                      profile_id: original.id,
+                      favorite: true,
+                    },
+                  },
+                });
+                toastr.options = {
+                  positionClass: 'toast-top-full-width',
+                  hideDuration: 300,
+                  timeOut: 60000,
+                };
+                toastr.clear();
+                setTimeout(() => toastr.success(`Unset favorite`), 300);
+              }}
+            />
+          )}
+        </>
+      );
+    },
   },
 ] as const;
 
@@ -433,6 +575,7 @@ const useNetworkTable = () => {
 
   // eslint-disable-next-line
   const data = useMemo(() => {
+    filterVar(debouncedFilter);
     return (
       // eslint-disable-next-line
       //@ts-ignore
@@ -445,7 +588,13 @@ const useNetworkTable = () => {
           []
       )
     );
-  }, [leaderboardsBatting.leaderboard_batting.leaderboard_batting, leaderboardsPitching.leaderboard_pitching.leaderboard_pitching]);
+    // eslint-disable-next-line
+  }, [
+    // eslint-disable-next-line
+    leaderboardsBatting?.leaderboard_batting?.leaderboard_batting,
+    // eslint-disable-next-line
+    leaderboardsPitching?.leaderboard_pitching?.leaderboard_pitching,
+  ]);
 
   const {
     getTableProps,
