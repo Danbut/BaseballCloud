@@ -12,6 +12,7 @@ import {
   Search,
   Select,
   SearchSuggestDropDown,
+  OutgoiningInput,
 } from './ui';
 import { BaseballIcon, LogoIcon, CheckboxIcon } from './icons';
 import { Anchor, Box, Flex, Grid, Text } from './primitives';
@@ -38,4 +39,5 @@ export {
   Search,
   Select,
   SearchSuggestDropDown,
+  OutgoiningInput,
 };

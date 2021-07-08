@@ -29,6 +29,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import storage from 'services/storage';
+import Network from 'screens/Network';
 import routes from './constants';
 
 const GlobalStyle = createGlobalStyle`
@@ -44,7 +45,6 @@ const GlobalStyle = createGlobalStyle`
       color: #333;
       line-height: 1.1;
       -webkit-font-smoothing: antialiased;
-      overflow: hidden;
     }
     #root {
       height: 100%;
@@ -87,6 +87,9 @@ const Routes: VFC = () => {
             </Route>
             <Route path={routes.profile}>
               <Profile />
+            </Route>
+            <Route path={routes.network}>
+              <Network />
             </Route>
             <Route exact path={routes.root}>
               {token ? (
