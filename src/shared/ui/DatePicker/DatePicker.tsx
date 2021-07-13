@@ -11,6 +11,7 @@ const DatePicker: VFC<{ value: Date; onChange(value: Date): void }> = ({
   onChange,
 }) => {
   const [isActive, setIsActive] = useState(false);
+
   return (
     <SelectContainer>
       <SelectButton onClick={() => setIsActive(!isActive)}>

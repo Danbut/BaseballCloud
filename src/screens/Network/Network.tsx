@@ -1,5 +1,6 @@
 import React from 'react';
 import Table from 'components/network/NetworkTable';
+import Table from 'components/app/Table';
 import { ContentContainer } from 'shared';
 import withAuth from 'hocs/withAuth';
 

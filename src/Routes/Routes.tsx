@@ -100,6 +100,9 @@ const Routes: VFC = () => {
             <Route path={routes.leaderboard}>
               <Leaderboard />
             </Route>
+            <Route path={routes.network}>
+              <Network />
+            </Route>
             <Route exact path={routes.root}>
               {token ? (
                 <Redirect to={routes.profile} />

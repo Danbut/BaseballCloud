@@ -2330,6 +2330,7 @@ export type LeaderboardBattingQueryResult = Apollo.QueryResult<
   LeaderboardBattingQuery,
   LeaderboardBattingQueryVariables
 >;
+  
 export const LeaderboardPitchingDocument = gql`
   query LeaderboardPitching($input: FilterLeaderboardInput!) {
     leaderboard_pitching(input: $input) {
@@ -2406,6 +2407,7 @@ export type LeaderboardPitchingQueryResult = Apollo.QueryResult<
   LeaderboardPitchingQuery,
   LeaderboardPitchingQueryVariables
 >;
+  
 export const NotificationsDocument = gql`
   query Notifications($input: FilterNotificationsInput!) {
     notifications(input: $input) {
