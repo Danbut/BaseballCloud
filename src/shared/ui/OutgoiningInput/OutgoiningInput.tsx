@@ -1,3 +1,4 @@
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, VFC } from 'react';
 import Flex from 'shared/primitives/Flex';
@@ -11,7 +12,6 @@ const OutgoininigInput: VFC<{
   onChange(value: string): void;
 }> = ({ placeholder, name, value, onChange, numeric }) => {
   const [isActive, setIsActive] = useState(false);
-  const icon = isActive ? 'up' : 'down';
 
   return (
     <Flex>
@@ -24,15 +24,15 @@ const OutgoininigInput: VFC<{
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
-      <Flex alignItems="center">{validIcons[icon]}</Flex>
+      <Flex alignItems="center">{icons.get(isActive)}</Flex>
     </Flex>
   );
 };
 
-const validIcons = {
-  up: <FontAwesomeIcon icon="chevron-up" color="#48bbff" />,
-  down: <FontAwesomeIcon icon="chevron-down" color="#48bbff" />,
-} as const;
+const icons = new Map([
+  [true, <FontAwesomeIcon icon={faChevronUp} color="#48bbff" />],
+  [false, <FontAwesomeIcon icon={faChevronDown} color="#48bbff" />],
+]);
 
 const StyledInput = styled.input`
   background-color: transparent;

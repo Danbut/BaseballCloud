@@ -7,6 +7,7 @@ const routes = {
   signUp: '/registration',
   forgotPassword: '/forgotpassword',
   network: '/network',
+  leaderboard: '/leaderboard',
 };
 
 export default routes;
